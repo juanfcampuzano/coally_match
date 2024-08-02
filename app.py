@@ -18,6 +18,11 @@ import pickle as pkl
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from dotenv import load_dotenv
+
+load_dotenv()
+
+os.environ['OPENAI_API_KEY'] = os.getenv('OPENAI_API_KEY')
 
 def connect_to_mongodb(uri, db_name, projects_col, cvs_col):
     """
