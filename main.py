@@ -502,8 +502,6 @@ def create_project(id_project):
     connection.commit()
 
 
-os.environ['OPENAI_API_KEY'] = "sk-proj-Bw0kwmAtgB4Av8lTBsHxT3BlbkFJqWdAmRT9kP4tQVTQjV74"
-
 majors = ['negocios internacionales', 'ingenieria de sistemas', 'ingenieria de minas', 'ingenieria civil', 'arquitectura', 'economia',  'lenguas modernas', 'comunicacion social', 'sociologia', 'medicina', 'ingenieria quimica', 'enfermeria', 'quimico', 'docente', 'marketing', 'ingenieria metalurgica', 'psicologia', 'project manager', 'gastronomia', 'matematicas', 'bioquimica', 'antropologia', 'diseño', 'fisioterapia', 'administracion', 'contabilidad', 'ingenieria mecanica', 'ingenieria electrica', 'agronomia', 'topografia', 'biomedico', 'biologia', 'odontologia', 'ingenieria electronica', 'ingenieria ambiental', 'trabajo social', 'geologia', 'farmacia', 'ingenieria comercial', 'derecho', 'ingenieria en alimentos', 'veterinaria', 'ingenieria industrial']
 
 host = 'db-resumescreening-coally.c960wcwwcazt.us-east-2.rds.amazonaws.com'
