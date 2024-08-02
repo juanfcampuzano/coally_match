@@ -460,7 +460,7 @@ def calculate_compatibility(cv_parsed, project_parsed, vectorizer, scaler, model
 def calculate_compatible_cvs(project_parsed, scaler, vectorizer, model, cursor):
     majors = project_parsed['majors']
     compatible_cvs = get_cvs_from_majors(majors, cursor)
-    compatibilities = {cv['id']:calculate_compatibility(project_parsed, cv, vectorizer, scaler, model) for cv in compatible_cvs}
+    compatibilities = {cv['id']:max(0,min(calculate_compatibility(project_parsed, cv, vectorizer, scaler, model),100)) for cv in compatible_cvs}
     return compatibilities
 
  # the same for a given project
@@ -468,7 +468,7 @@ def calculate_compatible_cvs(project_parsed, scaler, vectorizer, model, cursor):
 def calculate_compatible_projects(cv_parsed, scaler, vectorizer, model, cursor):
     majors = cv_parsed['majors']
     compatible_projects = get_projects_from_majors(majors, cursor)
-    compatibilities = {project['id']:calculate_compatibility(cv_parsed, project, vectorizer, scaler, model) for project in compatible_projects}
+    compatibilities = {project['id']:max(0, min(calculate_compatibility(cv_parsed, project, vectorizer, scaler, model), 100)) for project in compatible_projects}
     return compatibilities
 
 
@@ -538,16 +538,16 @@ class CreateCVRequest(BaseModel):
 class CreateProjectRequest(BaseModel):
     id_project: str
 
-@app.get("/")
+@app.get("/api/")
 async def root():
     return {"message": "Hello World"}
 
-@app.post("/create_project")
+@app.post("/api/create_project")
 def add_project(request: CreateProjectRequest):
     create_project(id_project=request.id_project)
     return {'message':'Proyecto creado'}
 
-@app.post("/create_cv")
+@app.post("/api/create_cv")
 def add_cv(request:CreateCVRequest):
     create_cv(id_cv=request.id_cv)
     return {'message':'CV creado'}
