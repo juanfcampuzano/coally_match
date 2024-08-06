@@ -20,6 +20,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from dotenv import load_dotenv
 from psycopg2 import OperationalError, InterfaceError, DatabaseError
+from psycopg2.errors import InFailedSqlTransaction
 
 load_dotenv()
 
@@ -498,7 +499,7 @@ def create_cv(id_cv):
         compatibilities = calculate_compatible_projects(parsed_cv, scaler, vectorizer, model, cursor)
         insert_compatibilities_for_cv(id_cv, compatibilities, cursor)
         connection.commit()
-    except (OperationalError, InterfaceError, DatabaseError) as e:
+    except (OperationalError, InterfaceError, DatabaseError, InFailedSqlTransaction) as e:
         if connection:
             connection.rollback()
     
@@ -511,7 +512,7 @@ def create_project(id_project):
         compatibilities = calculate_compatible_cvs(parsed_project, scaler, vectorizer, model, cursor)
         insert_compatibilities_for_project(id_project, compatibilities, cursor)
         connection.commit()
-    except (OperationalError, InterfaceError, DatabaseError) as e:
+    except (OperationalError, InterfaceError, DatabaseError, InFailedSqlTransaction) as e:
         if connection:
             connection.rollback()
 
