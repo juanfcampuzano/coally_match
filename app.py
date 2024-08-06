@@ -19,6 +19,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from dotenv import load_dotenv
+from psycopg2 import OperationalError, InterfaceError, DatabaseError
 
 load_dotenv()
 
@@ -491,20 +492,28 @@ def insert_compatibilities_for_project(id_project, compatibilities, cursor):
 
 def create_cv(id_cv):
     global majors, cvs_collection, cursor, scaler, vectorizer, model, connection
-    parsed_cv = preprocess_cv(cvs_collection, id_cv, majors)
-    store_parsed_cv(parsed_cv, cursor)
-    compatibilities = calculate_compatible_projects(parsed_cv, scaler, vectorizer, model, cursor)
-    insert_compatibilities_for_cv(id_cv, compatibilities, cursor)
-    connection.commit()
+    try:
+        parsed_cv = preprocess_cv(cvs_collection, id_cv, majors)
+        store_parsed_cv(parsed_cv, cursor)
+        compatibilities = calculate_compatible_projects(parsed_cv, scaler, vectorizer, model, cursor)
+        insert_compatibilities_for_cv(id_cv, compatibilities, cursor)
+        connection.commit()
+    except (OperationalError, InterfaceError, DatabaseError) as e:
+        if connection:
+            connection.rollback()
     
 
 def create_project(id_project):
     global majors, projects_collection, cursor, scaler, vectorizer, model, connection
-    parsed_project = preprocess_project(projects_collection, id_project, majors)
-    store_parsed_project(parsed_project, cursor)
-    compatibilities = calculate_compatible_cvs(parsed_project, scaler, vectorizer, model, cursor)
-    insert_compatibilities_for_project(id_project, compatibilities, cursor)
-    connection.commit()
+    try:
+        parsed_project = preprocess_project(projects_collection, id_project, majors)
+        store_parsed_project(parsed_project, cursor)
+        compatibilities = calculate_compatible_cvs(parsed_project, scaler, vectorizer, model, cursor)
+        insert_compatibilities_for_project(id_project, compatibilities, cursor)
+        connection.commit()
+    except (OperationalError, InterfaceError, DatabaseError) as e:
+        if connection:
+            connection.rollback()
 
 
 majors = ['negocios internacionales', 'ingenieria de sistemas', 'ingenieria de minas', 'ingenieria civil', 'arquitectura', 'economia',  'lenguas modernas', 'comunicacion social', 'sociologia', 'medicina', 'ingenieria quimica', 'enfermeria', 'quimico', 'docente', 'marketing', 'ingenieria metalurgica', 'psicologia', 'project manager', 'gastronomia', 'matematicas', 'bioquimica', 'antropologia', 'diseño', 'fisioterapia', 'administracion', 'contabilidad', 'ingenieria mecanica', 'ingenieria electrica', 'agronomia', 'topografia', 'biomedico', 'biologia', 'odontologia', 'ingenieria electronica', 'ingenieria ambiental', 'trabajo social', 'geologia', 'farmacia', 'ingenieria comercial', 'derecho', 'ingenieria en alimentos', 'veterinaria', 'ingenieria industrial']
