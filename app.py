@@ -222,8 +222,6 @@ def remove_accents(text):
 
 def parse_cv(cv, majors):
 
-    print('cv', cv)
-
     model = ChatOpenAI(temperature=0, model='gpt-4o-mini')
 
     query = f"""Extrae la experiencia en meses que tiene el cv, puedes dar un estimado a partir de la duracion de los cargos o si en la descripción dice.
@@ -253,8 +251,6 @@ def parse_cv(cv, majors):
         response['majors'] = [remove_accents(str(i).lower()) for i in response['majors'] if remove_accents(str(i).lower()) in [c.lower() for c in majors]]
     else:
         response['majors'] = []
-
-    print(response)
     
     return response
 
