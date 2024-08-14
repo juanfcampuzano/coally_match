@@ -163,6 +163,7 @@ def parse_experience(cv):
         job_titles.extend(
             position.get('nombrecargo', '') for position in positions if isinstance(positions, list)
         )
+        job_titles.append(f"desde {exp['fecha_inicio']} hasta {exp['fecha_finalizacion']}") if 'fecha_inicio' in exp and 'fecha_finalizacion' in exp else None
 
     return ', '.join(job_titles)
 
@@ -251,7 +252,6 @@ def parse_cv(cv, majors):
         response['majors'] = []
     
     return response
-
 
 
 def preprocess_project(projects_collection, project_id, majors):
