@@ -21,6 +21,7 @@ from pydantic import BaseModel
 from dotenv import load_dotenv
 from psycopg2 import OperationalError, InterfaceError, DatabaseError
 from psycopg2.errors import InFailedSqlTransaction
+from datetime import datetime
 
 load_dotenv()
 
@@ -575,10 +576,20 @@ async def root():
 
 @app.post("/api/create_project")
 def add_project(request: CreateProjectRequest):
-    create_project(id_project=request.id_project)
+    try:
+        create_project(id_project=request.id_project)
+    except Exception as e:
+        cursor.execute(f"INSERT into public.error_log (fecha, tipo, mensaje) VALUES ({datetime.now()}, 'project', '{e}')")
+        connection.commit()
+        raise e
     return {'message':'Proyecto creado'}
 
 @app.post("/api/create_cv")
 def add_cv(request:CreateCVRequest):
-    create_cv(id_cv=request.id_cv)
+    try:
+        create_cv(id_cv=request.id_cv)
+    except Exception as e:
+        cursor.execute(f"INSERT into public.error_log (fecha, tipo, mensaje) VALUES ({datetime.now()}, 'cv', '{e}')")
+        connection.commit()
+        raise e
     return {'message':'CV creado'}
