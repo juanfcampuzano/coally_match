@@ -141,7 +141,6 @@ def parse_job_offer(job_offer, majors):
     else:
         response['majors'] = []
 
-    print('response', response)
 
     return response
 
@@ -515,6 +514,7 @@ def create_cv(id_cv):
         insert_compatibilities_for_cv(id_cv, compatibilities, cursor)
         connection.commit()
     except (OperationalError, InterfaceError, DatabaseError, InFailedSqlTransaction) as e:
+        print(e)
         if connection:
             connection.rollback()
     
@@ -528,6 +528,7 @@ def create_project(id_project):
         insert_compatibilities_for_project(id_project, compatibilities, cursor)
         connection.commit()
     except (OperationalError, InterfaceError, DatabaseError, InFailedSqlTransaction) as e:
+        print(e)
         if connection:
             connection.rollback()
 
