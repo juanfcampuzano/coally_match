@@ -141,6 +141,8 @@ def parse_job_offer(job_offer, majors):
     else:
         response['majors'] = []
 
+    print('response', response)
+
     return response
 
 
