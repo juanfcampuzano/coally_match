@@ -21,7 +21,7 @@ from pydantic import BaseModel
 from dotenv import load_dotenv
 from psycopg2 import OperationalError, InterfaceError, DatabaseError
 from psycopg2.errors import InFailedSqlTransaction
-import datetime
+from datetime import datetime, timezone
 
 load_dotenv()
 
@@ -579,7 +579,8 @@ def add_project(request: CreateProjectRequest):
     try:
         create_project(id_project=request.id_project)
     except Exception as e:
-        cursor.execute(f"INSERT into public.error_log (fecha, tipo, mensaje) VALUES ({datetime.date.today()}, 'project', '{str(e).replace("'",'"')}')")
+        dt = datetime.now(timezone.utc)
+        cursor.execute(f"INSERT into public.error_log (fecha, tipo, mensaje) VALUES ({dt}, 'project', '{str(e).replace("'",'"')}')")
         connection.commit()
         raise e
     return {'message':'Proyecto creado'}
@@ -589,7 +590,8 @@ def add_cv(request:CreateCVRequest):
     try:
         create_cv(id_cv=request.id_cv)
     except Exception as e:
-        cursor.execute(f"INSERT into public.error_log (fecha, tipo, mensaje) VALUES ({datetime.date.today()}, 'cv', '{str(e).replace("'",'"')}')")
+        dt = datetime.now(timezone.utc)
+        cursor.execute(f"INSERT into public.error_log (fecha, tipo, mensaje) VALUES ({dt}, 'cv', '{str(e).replace("'",'"')}')")
         connection.commit()
         raise e
     return {'message':'CV creado'}
