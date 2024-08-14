@@ -579,7 +579,7 @@ def add_project(request: CreateProjectRequest):
     try:
         create_project(id_project=request.id_project)
     except Exception as e:
-        cursor.execute(f"INSERT into public.error_log (fecha, tipo, mensaje) VALUES ({datetime.now()}, 'project', '{e}')")
+        cursor.execute(f"INSERT into public.error_log (fecha, tipo, mensaje) VALUES ({datetime.now().strftime('%H:%M:%S')}, 'project', '{e}')")
         connection.commit()
         raise e
     return {'message':'Proyecto creado'}
@@ -589,7 +589,7 @@ def add_cv(request:CreateCVRequest):
     try:
         create_cv(id_cv=request.id_cv)
     except Exception as e:
-        cursor.execute(f"INSERT into public.error_log (fecha, tipo, mensaje) VALUES ({datetime.now()}, 'cv', '{e}')")
+        cursor.execute(f"INSERT into public.error_log (fecha, tipo, mensaje) VALUES ({datetime.now().strftime('%H:%M:%S')}, 'cv', '{e}')")
         connection.commit()
         raise e
     return {'message':'CV creado'}
