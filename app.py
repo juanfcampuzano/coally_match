@@ -224,10 +224,11 @@ def parse_cv(cv, majors):
 
     model = ChatOpenAI(temperature=0, model='gpt-4o-mini')
 
-    query = f"""Extrae la experiencia en meses que tiene el cv. Extrae las palabras clave más relevantes del cv. 
-    También extrae los conocimientos de herramientas que tiene la persona. También extrae el nivel educativo que tiene la persona, 
-    puede ser: [basico, tecnico, tecnologico, profesional, maestria, doctorado]. También dime cual o cuales de las carreras de esta lista: {str(majors)}, 
-    está estudiando o estudió la persona. Si la persona es ventas o asesoria comercial, la carrera es ingeniería comercial, si es operaciones o calidad de 
+    query = f"""Extrae la experiencia en meses que tiene el cv, puedes dar un estimado a partir de la duracion de los cargos o si en la descripción dice.
+    Extrae las palabras clave más relevantes del cv. También extrae los conocimientos de herramientas que tiene la persona. 
+    También extrae el nivel educativo que tiene la persona, puede ser: [basico, tecnico, tecnologico, profesional, maestria, doctorado]. 
+    También dime cual o cuales de las carreras de esta lista: {str(majors)}, está estudiando o estudió la persona. 
+    Si la persona es ventas o asesoria comercial, la carrera es ingeniería comercial, si es operaciones o calidad de 
     procesos probablemente sea ingenieria industrial, si es algo relacionado a electronica, automatizacion o mantenimiento probablemente 
     la persona sea de ingenieria electronica. si menciona algo administrativo, probablemente la carrera sea administracion. ciencias de la computacion y relacionados a ciencia
     de datos e inteligencia artificial, analisis de datos tomalo como ingenieria de sistemas, administracion de mercadeo puede ser marketing:
