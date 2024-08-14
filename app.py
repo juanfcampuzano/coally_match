@@ -154,7 +154,7 @@ def parse_experience(cv):
     Returns:
     str: A string containing parsed experience details.
     """
-    if 'experience' not in cv:
+    if 'experiencia' not in cv:
         return ''
     
     job_titles = []
