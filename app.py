@@ -259,9 +259,13 @@ def preprocess_project(projects_collection, project_id, majors):
     project_string = get_project_string(project)
     parsed_project = parse_job_offer(project_string, majors)
     parsed_project['id'] = project_id
-    return parsed_project
+
+    extra_info = {'aprobados':'-'.join(project['approvedBy'])+'-coally' if len(project['approvedBy']) > 0 else 'coally',
+                  'tipos': project['tipoDeServicioDeseado']+'-Todas' if 'tipoDeServicioDeseado' in project else 'Todas-Oferta laboral'}
+    return parsed_project, extra_info
 
 def preprocess_cv(cvs_collection, cv_id, majors):
+    print(type(ObjectId(cv_id)), ObjectId(cv_id))
     cv = cvs_collection.find_one({'_id':ObjectId(cv_id)})
     cv_string = get_cv_string(cv)
     parsed_string = parse_cv(cv_string, majors)
@@ -282,9 +286,17 @@ def store_parsed_cv(parsed_cv, cursor):
     cursor.execute(query)
 
 # almacenar un project parseado en la base de datos
-def store_parsed_project(parsed_project, cursor):
+def store_parsed_project(parsed_project, cursor, extra_info):
     query = f"""INSERT INTO public.parsed_projects (id, majors, experience, education_level, technical_skills, keywords) VALUES ('{parsed_project['id']}', 
     '{'|'.join(parsed_project['majors'])}', {parsed_project['experience']}, '{parsed_project['education_level']}', '{'|'.join(parsed_project['technical_skills'])}', '{'|'.join(parsed_project['keywords'])}')"""
+    cursor.execute(query)
+
+    tipos = extra_info['tipos'] if 'tipos' in extra_info else 'Oferta laboral-Todas'
+    aprobados = extra_info['aprobados'] if 'aprobados' in extra_info else 'coally'
+
+    query = f"""INSERT INTO public.filters_projects(
+    id, tipo_oferta, approved_by)
+    VALUES ('{parsed_project['id']}', '{tipos}', '{aprobados}');"""
     cursor.execute(query)
 
 
@@ -507,8 +519,8 @@ def create_cv(id_cv):
 def create_project(id_project):
     global majors, projects_collection, cursor, scaler, vectorizer, model, connection
     try:
-        parsed_project = preprocess_project(projects_collection, id_project, majors)
-        store_parsed_project(parsed_project, cursor)
+        parsed_project, extra_info = preprocess_project(projects_collection, id_project, majors)
+        store_parsed_project(parsed_project, cursor, extra_info)
         compatibilities = calculate_compatible_cvs(parsed_project, scaler, vectorizer, model, cursor)
         insert_compatibilities_for_project(id_project, compatibilities, cursor)
         connection.commit()
