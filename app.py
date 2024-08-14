@@ -251,6 +251,8 @@ def parse_cv(cv, majors):
         response['majors'] = [remove_accents(str(i).lower()) for i in response['majors'] if remove_accents(str(i).lower()) in [c.lower() for c in majors]]
     else:
         response['majors'] = []
+
+    print(response)
     
     return response
 
