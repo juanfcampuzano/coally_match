@@ -205,6 +205,13 @@ def get_cv_string(cv):
         parse_education(cv) + " " +
         (', '.join(cv['info_personal']['profesion_actual']) if 'info_personal' in cv and 'profesion_actual' in cv['info_personal'] else '')
         )
+
+        aumentos_contexto = {"auxiliar contable": "contabilidad", "auxiliar administrativo": 'administración de empresas'}
+
+        for key, value in aumentos_contexto.items():
+            if key in string:
+                string += ' '+value
+
         return string
 
 class Resume(BaseModel):
