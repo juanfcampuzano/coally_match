@@ -491,6 +491,7 @@ def calculate_compatible_cvs(project_parsed, scaler, vectorizer, model, cursor):
     majors = project_parsed['majors']
     compatible_cvs = get_cvs_from_majors(majors, cursor)
     print('len(compatible_cvs)', len(compatible_cvs))
+    return
     compatibilities = {cv['id']:max(0,min(calculate_compatibility(project_parsed, cv, vectorizer, scaler, model),100)) for cv in compatible_cvs}
     return compatibilities
 
