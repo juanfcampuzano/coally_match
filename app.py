@@ -339,6 +339,7 @@ def get_projects_from_majors(majors, cursor):
 def get_cvs_from_majors(majors, cursor):
     total_cvs = []
     for major in majors:
+        print('major', major)
         query = f"""SELECT * FROM public.parsed_cvs WHERE majors LIKE '%{major}%'"""
         cursor.execute(query)
         rows = cursor.fetchall()
