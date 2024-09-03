@@ -490,8 +490,6 @@ def calculate_compatibility(cv_parsed, project_parsed, vectorizer, scaler, model
 def calculate_compatible_cvs(project_parsed, scaler, vectorizer, model, cursor):
     majors = project_parsed['majors']
     compatible_cvs = get_cvs_from_majors(majors, cursor)
-    print('len(compatible_cvs)', len(compatible_cvs))
-    return
     compatibilities = {cv['id']:max(0,min(calculate_compatibility(project_parsed, cv, vectorizer, scaler, model),100)) for cv in compatible_cvs}
     return compatibilities
 
@@ -511,9 +509,15 @@ def insert_compatibilities_for_cv(id_cv, compatibilities, cursor):
         cursor.execute(query)
 
 def insert_compatibilities_for_project(id_project, compatibilities, cursor):
+    count = 0
     for id_cv, compatibility in compatibilities.items():
         query = f"""INSERT INTO public.compatibilities (id_project, id_cv, compatibility) VALUES ('{id_project}','{id_cv}', {compatibility} )"""
         cursor.execute(query)
+        count += 1
+
+        if count >= 10:
+            connection.commit()
+            count = 0
 
 
 def create_cv(id_cv):
@@ -539,7 +543,6 @@ def create_project(id_project):
         print('stored')
         compatibilities = calculate_compatible_cvs(parsed_project, scaler, vectorizer, model, cursor)
         insert_compatibilities_for_project(id_project, compatibilities, cursor)
-        connection.commit()
     except (OperationalError, InterfaceError, DatabaseError, InFailedSqlTransaction) as e:
         print(e)
         if connection:
