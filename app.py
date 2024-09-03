@@ -583,10 +583,12 @@ class CreateProjectRequest(BaseModel):
 
 @app.get("/api/")
 async def root():
+    print('test')
     return {"message": "Hello World"}
 
 @app.post("/api/create_project")
 def add_project(request: CreateProjectRequest):
+    print('request', request)
     try:
         print('id_project', request.id_project)
         create_project(id_project=request.id_project)
