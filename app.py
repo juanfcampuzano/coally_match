@@ -518,6 +518,7 @@ def insert_compatibilities_for_project(id_project, compatibilities, cursor):
         if count >= 10:
             connection.commit()
             count = 0
+    connection.commit()
 
 
 def create_cv(id_cv):
