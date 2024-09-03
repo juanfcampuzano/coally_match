@@ -534,6 +534,7 @@ def create_project(id_project):
     try:
         parsed_project, extra_info = preprocess_project(projects_collection, id_project, majors)
         store_parsed_project(parsed_project, cursor, extra_info)
+        connection.commit()
         print('stored')
         compatibilities = calculate_compatible_cvs(parsed_project, scaler, vectorizer, model, cursor)
         insert_compatibilities_for_project(id_project, compatibilities, cursor)
