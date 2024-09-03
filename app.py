@@ -206,7 +206,7 @@ def get_cv_string(cv):
         (', '.join(cv['info_personal']['profesion_actual']) if 'info_personal' in cv and 'profesion_actual' in cv['info_personal'] else '')
         )
 
-        aumentos_contexto = {"auxiliar contable": "contabilidad", "auxiliar administrativo": 'administración de empresas'}
+        aumentos_contexto = {"auxiliar contable": "contabilidad", "auxiliar administrativo": 'administración de empresas', 'Relaciones Internacionales': 'negocios internacionales', 'relaciones internacionales': 'negocios internacionales'}
 
         for key, value in aumentos_contexto.items():
             if key in string:
