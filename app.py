@@ -588,8 +588,10 @@ async def root():
 @app.post("/api/create_project")
 def add_project(request: CreateProjectRequest):
     try:
+        print('id_project', request.id_project)
         create_project(id_project=request.id_project)
     except Exception as e:
+        print('e',e)
         dt = datetime.now(timezone.utc)
         cursor.execute(f"INSERT into public.error_log (fecha, tipo, mensaje, id) VALUES ('{dt}', 'project', '{str(e).replace("'",'"')}', '{request.id_project}')")
         connection.commit()
