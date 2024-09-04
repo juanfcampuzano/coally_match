@@ -504,7 +504,7 @@ def calculate_compatible_projects(cv_parsed, scaler, vectorizer, model, cursor):
 
 
 def insert_compatibilities_for_cv(id_cv, compatibilities, cursor):
-    calculate_compatible_cvsount = 0
+    count = 0
     for id_project, compatibility in compatibilities.items():
         query = f"""INSERT INTO public.compatibilities (id_project, id_cv, compatibility) VALUES ('{id_project}','{id_cv}', {compatibility} )"""
         cursor.execute(query)
