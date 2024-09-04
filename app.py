@@ -504,9 +504,16 @@ def calculate_compatible_projects(cv_parsed, scaler, vectorizer, model, cursor):
 
 
 def insert_compatibilities_for_cv(id_cv, compatibilities, cursor):
+    calculate_compatible_cvsount = 0
     for id_project, compatibility in compatibilities.items():
         query = f"""INSERT INTO public.compatibilities (id_project, id_cv, compatibility) VALUES ('{id_project}','{id_cv}', {compatibility} )"""
         cursor.execute(query)
+        count += 1
+
+        if count >= 10:
+            connection.commit()
+            count = 0
+    connection.commit()
 
 def insert_compatibilities_for_project(id_project, compatibilities, cursor):
     count = 0
@@ -526,6 +533,7 @@ def create_cv(id_cv):
     try:
         parsed_cv = preprocess_cv(cvs_collection, id_cv, majors)
         store_parsed_cv(parsed_cv, cursor)
+        connection.commit()
         compatibilities = calculate_compatible_projects(parsed_cv, scaler, vectorizer, model, cursor)
         insert_compatibilities_for_cv(id_cv, compatibilities, cursor)
         connection.commit()
