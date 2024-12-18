@@ -146,3 +146,7 @@ def consume_queue():
         else:
             logger.debug("Waiting for messages.")
             time.sleep(5)
+
+
+logger.info("Starting SQS consumer...")
+consume_queue()
