@@ -16,6 +16,7 @@ from app_helper import AppHelper
 import boto3
 import json
 import time
+import re
 
 logger = AppLogger("App").get_logger()
 
@@ -103,25 +104,35 @@ def delete_resume(request: DeleteResumeRequest):
 
 
 def process_message(message_body):
-    message = json.loads(message_body)
-    operation = message["operation"]
-    entity = message["entity"]
-    data = message["data"]
+    try:
+        cleaned_body = re.sub(r'\r\n', '', message_body)
+        message = json.loads(cleaned_body)
 
-    if entity == "project":
-        if operation == "create":
-            add_project(data)
-        elif operation == "update":
-            update_project(data)
-        elif operation == "delete":
-            delete_project(data)
-    elif entity == "resume":
-        if operation == "create":
-            add_cv(data)
-        elif operation == "update":
-            update_cv(data)
-        elif operation == "delete":
-            delete_resume(data)
+        operation = message["action"]
+        entity = message["entity"]
+        data = message["body"]
+
+        if entity == "project":
+            if operation == "create":
+                add_project(data)
+            elif operation == "update":
+                update_project(data)
+            elif operation == "delete":
+                delete_project(data)
+        elif entity == "resume":
+            if operation == "create":
+                add_cv(data)
+            elif operation == "update":
+                update_cv(data)
+            elif operation == "delete":
+                delete_resume(data)
+
+    except json.JSONDecodeError as e:
+        logger.error(f"Invalid JSON format: {e} - Body: {message_body}")
+    except KeyError as e:
+        logger.error(f"Missing key in message: {e}")
+    except Exception as e:
+        logger.error(f"Unexpected error: {e}")
 
 
 def consume_queue():
@@ -142,7 +153,7 @@ def consume_queue():
                     )
                     logger.info("Message processed and removed from queue.")
                 except Exception as e:
-                    logger.error(f"Error processing message", e)
+                    logger.error(f"Error processing message: {e}")
         else:
             logger.debug("Waiting for messages.")
             time.sleep(5)
