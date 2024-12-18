@@ -64,10 +64,12 @@ class PostgresHandler:
 
         if entity_type == "resume":
             for project_id, percentage in compatibilities.items():
+                percentage = float(percentage)
                 values_to_insert.append((project_id, key_id, percentage))
                 insert_count += 1
         elif entity_type == "project":
             for resume_id, percentage in compatibilities.items():
+                percentage = float(percentage)
                 values_to_insert.append((key_id, resume_id, percentage))
                 insert_count += 1
 
