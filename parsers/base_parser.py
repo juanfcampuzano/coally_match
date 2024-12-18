@@ -1,35 +1,30 @@
 import os
 import json
-from langchain_openai import ChatOpenAI
-from langchain.prompts import ChatPromptTemplate
+import openai
+import yaml
 import logging
 from .major_classifier import MajorClassifier
 from .logger import AppLogger
-import yaml
+
+from pydantic import BaseModel
 
 logger = AppLogger("Base Parser").get_logger()
 
 class BaseParser:
 
-    def __init__(self, template="", output_model = None):
-
+    def __init__(self, template="", output_model=None):
         config = self.load_config("./config.yaml")
         self.majors = config.get("majors", [])
         self.major_classifier = MajorClassifier(majors=self.majors)
 
-        if output_model is None:
-            self.output_model = {"type": "json_object"}
-        else:
-            self.output_model = output_model
+        self.output_model = output_model or {"type": "json_object"}
+
+        if isinstance(self.output_model, BaseModel):
+            self.output_model = self.output_model.model_json_schema()
 
         self.template = template
 
-        self.llm = ChatOpenAI(
-            model_name="gpt-4o-mini",
-            api_key = os.getenv("OPENAI_API_KEY"),
-            temperature = 0
-            )
-        self.llm=self.llm.bind(response_format=output_model)
+        openai.api_key = os.getenv("OPENAI_API_KEY")
 
     def load_config(self, file_path):
         with open(file_path, 'r', encoding='utf-8') as file:
@@ -40,17 +35,31 @@ class BaseParser:
             return client_config
         else:
             raise ValueError(f"Cliente '{client}' no encontrado en el archivo de configuración.")
-        
 
     def run(self, inputs):
         logger.debug("Initialized BaseParser")
         majors = self.major_classifier.run(inputs)
 
-        prompt = ChatPromptTemplate.from_template(self.template)
-        chain = prompt | self.llm
-        result = chain.invoke(inputs)
-        result = json.loads(result.content)
+        formatted_prompt = self.template.format(**inputs)
+
+        try:
+            response = openai.beta.chat.completions.parse(
+                model="gpt-4o-mini",
+                messages=[
+                    {"role": "system", "content": "Eres un asistente útil."},
+                    {"role": "user", "content": formatted_prompt}
+                ],
+                temperature=0,
+                response_format=self.output_model
+            )
+
+            result_content = response.choices[0].message.content
+            result = json.loads(result_content)
+        except Exception as e:
+            logger.error(f"Error en la llamada al API de OpenAI: {e}")
+            raise
+
         result["majors"] = majors
 
-        logger.debug("Finished running base parser")
+        logger.debug("Finished running BaseParser")
         return result

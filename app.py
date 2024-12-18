@@ -102,10 +102,17 @@ def delete_resume(request: DeleteResumeRequest):
     logger.warning(f"Couldn't update resume with id {request.id_cv}.")
     return {"message": f"Couldn't update resume with id {request.id_cv}."}
 
+def limpiar_json(json_sucio):
+    json_limpio = re.sub(r'\\[nrt]', '', json_sucio)
+    json_limpio = re.sub(r'\\"', '"', json_limpio)
+    json_limpio = re.sub(r'[\n\r\t]', '', json_limpio)
+    json_limpio = re.sub(r'\s{2,}', ' ', json_limpio)
+    json_limpio = json_limpio.strip()
+    return json_limpio
 
-def process_message(message_body):
+def process_message(message_body: str):
     try:
-        cleaned_body = re.sub(r'\r\n', '', message_body)
+        cleaned_body = limpiar_json(message_body)
         message = json.loads(cleaned_body)
 
         operation = message["action"]
@@ -114,18 +121,18 @@ def process_message(message_body):
 
         if entity == "project":
             if operation == "create":
-                add_project(data)
+                add_project(CreateProjectRequest.model_validate(data))
             elif operation == "update":
-                update_project(data)
+                update_project(CreateProjectRequest.model_validate(data))
             elif operation == "delete":
-                delete_project(data)
+                delete_project(DeleteProjectRequest.model_validate(data))
         elif entity == "resume":
             if operation == "create":
-                add_cv(data)
+                add_cv(CreateResumeRequest.model_validate(data))
             elif operation == "update":
-                update_cv(data)
+                update_cv(CreateResumeRequest.model_validate(data))
             elif operation == "delete":
-                delete_resume(data)
+                delete_resume(DeleteResumeRequest.model_validate(data))
 
     except json.JSONDecodeError as e:
         logger.error(f"Invalid JSON format: {e} - Body: {message_body}")
@@ -140,11 +147,12 @@ def consume_queue():
         response = sqs.receive_message(
             QueueUrl=QUEUE_URL,
             MaxNumberOfMessages=1,
-            WaitTimeSeconds=10
+            WaitTimeSeconds=10,
+            VisibilityTimeout=120
         )
         if "Messages" in response:
             for message in response["Messages"]:
-                logger.info(f"Processing message: {message["Body"]}")
+                logger.info(f"Processing message: {message['Body']}")
                 try:
                     process_message(message["Body"])
                     sqs.delete_message(
