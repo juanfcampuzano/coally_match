@@ -8,3 +8,5 @@ numpy
 scikit-learn
 langchain-openai
 langchain
+pandas
+boto3

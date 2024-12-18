@@ -43,7 +43,6 @@ class AppHelper:
         parsed_resume = self.resume_parser.run(resume)
         parsed_resume['id'] = ObjectId(resume_id)
         self.logger.info(f"Parsed resume with id {resume_id}")
-        print(parsed_resume)
         return parsed_resume
 
     

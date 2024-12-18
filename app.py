@@ -9,15 +9,22 @@ from parsers.models.update_project_filters_request import UpdateProjectRequest
 from parsers.models.update_resume_request import UpdateResumeRequest
 from parsers.models.delete_project_request import DeleteProjectRequest
 from parsers.models.delete_resume_request import DeleteResumeRequest
+from parsers.models.message_request import MessageRequest
 from parsers.decorators import handle_exception
 from parsers.logger import AppLogger
 from app_helper import AppHelper
+import boto3
+import json
+import time
 
 logger = AppLogger("App").get_logger()
 
 load_dotenv()
 
-app = FastAPI()
+app = FastAPI(docs_url="/api/docs")
+
+sqs = boto3.client("sqs", region_name="us-east-2")
+QUEUE_URL = "https://sqs.us-east-2.amazonaws.com/203152832070/ml_empleo_uniandes.fifo"
 
 app.add_middleware(
     CORSMiddleware,
@@ -93,3 +100,49 @@ def delete_resume(request: DeleteResumeRequest):
         return {"message": f"Updated resume with id {request.id_cv}"}
     logger.warning(f"Couldn't update resume with id {request.id_cv}.")
     return {"message": f"Couldn't update resume with id {request.id_cv}."}
+
+
+def process_message(message_body):
+    message = json.loads(message_body)
+    operation = message["operation"]
+    entity = message["entity"]
+    data = message["data"]
+
+    if entity == "project":
+        if operation == "create":
+            add_project(data)
+        elif operation == "update":
+            update_project(data)
+        elif operation == "delete":
+            delete_project(data)
+    elif entity == "resume":
+        if operation == "create":
+            add_cv(data)
+        elif operation == "update":
+            update_cv(data)
+        elif operation == "delete":
+            delete_resume(data)
+
+
+def consume_queue():
+    while True:
+        response = sqs.receive_message(
+            QueueUrl=QUEUE_URL,
+            MaxNumberOfMessages=1,
+            WaitTimeSeconds=10
+        )
+        if "Messages" in response:
+            for message in response["Messages"]:
+                logger.info(f"Processing message: {message["Body"]}")
+                try:
+                    process_message(message["Body"])
+                    sqs.delete_message(
+                        QueueUrl=QUEUE_URL,
+                        ReceiptHandle=message["ReceiptHandle"]
+                    )
+                    logger.info("Message processed and removed from queue.")
+                except Exception as e:
+                    logger.error(f"Error processing message", e)
+        else:
+            logger.debug("Waiting for messages.")
+            time.sleep(5)
