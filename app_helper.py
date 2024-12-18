@@ -30,6 +30,7 @@ class AppHelper:
         parsed_project["id"] = ObjectId(project_id)
         parsed_project["approved_by"] = project.get("approved_by")
         parsed_project["type"] = project.get("type")
+        parsed_project["status"] = project.get("status")
         self.logger.info(f"Parsed project with id {project_id}")
         return parsed_project
 
