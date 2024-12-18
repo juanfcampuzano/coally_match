@@ -1,0 +1,259 @@
+clients:
+  coally:
+    majors:
+      - major: ingeniería química
+        description: Diseño y operación de procesos químicos.
+      - major: ingeniería civil
+        description: Construcción y mantenimiento de infraestructuras.
+      - major: ingeniería industrial
+        description: Optimización de sistemas y procesos empresariales.
+      - major: ingeniería de sistemas
+        description: Desarrollo y gestión de sistemas informáticos, ciencias de la computación, software.
+      - major: administración de empresas
+        description: Gestión de recursos en organizaciones.
+      - major: arquitectura
+        description: Diseño y planificación de espacios.
+      - major: diseño
+        description: Creación de soluciones estéticas y funcionales.
+      - major: maestría en arte
+        description: Profundización en disciplinas artísticas.
+      - major: historia del arte
+        description: Estudio de la evolución de las artes visuales.
+      - major: literatura
+        description: Análisis y creación de obras literarias.
+      - major: música
+        description: Formación en interpretación y creación musical.
+      - major: narración digital
+        description: Contar historias en plataformas digitales.
+      - major: biología
+        description: Estudio de organismos y sus interacciones.
+      - major: física
+        description: Estudio de principios y leyes del universo.
+      - major: geociencias
+        description: Estudio de la Tierra y sus procesos.
+      - major: matemáticas
+        description: Estudio de estructuras y patrones.
+      - major: microbiología
+        description: Investigación de microorganismos.
+      - major: química
+        description: Estudio de la composición y propiedades de la materia.
+      - major: antropología
+        description: Estudio de la humanidad y su cultura.
+      - major: ciencia política
+        description: Análisis de sistemas y teorías políticas.
+      - major: filosofía
+        description: Exploración de cuestiones fundamentales.
+      - major: historia
+        description: Investigación y análisis de eventos pasados.
+      - major: profesional en lenguas y cultura
+        description: Estudio de lenguas y su contexto cultural.
+      - major: psicología
+        description: Estudio del comportamiento y procesos mentales. También incluye temas de recursos humanos o de reclutamiento y selección de personal.
+      - major: derecho
+        description: Interpretación y aplicación de leyes.
+      - major: economía
+        description: Estudio de producción y consumo.
+      - major: gobierno y asuntos públicos
+        description: Gestión y análisis de políticas públicas.
+      - major: licenciatura en matemáticas
+        description: Enseñanza y aplicación de conceptos matemáticos.
+      - major: licenciatura en química
+        description: Enseñanza y aplicación de la química.
+      - major: licenciatura en español y filología
+        description: Estudio del español y la investigación filológica.
+      - major: licenciatura en biología
+        description: Enseñanza y aplicación de conceptos biológicos.
+      - major: licenciatura en educación infantil
+        description: Formación en enseñanza para niños pequeños.
+      - major: licenciatura en física
+        description: Enseñanza y aplicación de la física.
+      - major: licenciatura en historia
+        description: Investigación y enseñanza de la historia.
+      - major: licenciatura en artes
+        description: Formación en artes visuales y escénicas.
+      - major: licenciatura en filosofía
+        description: Preparación en pensamiento crítico.
+      - major: ingeniería ambiental
+        description: Protección y gestión del medio ambiente.
+      - major: ingeniería biomédica
+        description: Desarrollo de tecnologías para la salud.
+      - major: ingeniería civil
+        description: Diseño y construcción de infraestructuras.
+      - major: ingeniería electrónica
+        description: Diseño de sistemas electrónicos.
+      - major: ingeniería eléctrica
+        description: Estudio de sistemas eléctricos.
+      - major: ingeniería industrial
+        description: Optimización de procesos empresariales.
+      - major: ingeniería mecánica
+        description: Diseño y análisis de sistemas mecánicos.
+      - major: ingeniería química
+        description: Producción de materiales y sustancias.
+      - major: ingeniería de alimentos
+        description: Producción y conservación de alimentos.
+      - major: ingeniería de sistemas y computación
+        description: Desarrollo de software y sistemas informáticos.
+      - major: medicina
+        description: Diagnóstico y tratamiento de enfermedades.
+      - major: enfermería
+        description: Cuidado y atención de la salud de pacientes.
+      - major: negocios internacionales
+        description: Estudio de comercio y relaciones entre mercados globales.
+      - major: trabajos operativos
+        description: Cualquier trabajo que no requiere un título profesional como agentes de call center, operadores de máquina, cajeros.
+
+    mongo_collections:
+      projects: projects
+      resumes: usercvs
+      parsed_projects: ParsedProjects
+      parsed_resumes: ParsedResumes
+    
+    mongo_databases:
+      app: CoallyProd
+      ai: MatchingMLModel
+
+    postgres_tables:
+      compatibilities: coally_compatibility_percentages
+      project_filters: coally_project_filters
+
+  uniandes:
+    majors:
+      - major: administracion
+        description: Gestión de recursos en organizaciones.
+
+      - major: economia
+        description: Estudio de producción y consumo.
+
+      - major: gobierno y asuntos publicos
+        description: Gestión y análisis de políticas públicas.
+
+      - major: biologia
+        description: Estudio de organismos y sus interacciones.
+
+      - major: fisica
+        description: Estudio de principios y leyes del universo.
+
+      - major: geociencias
+        description: Estudio de la Tierra y sus procesos.
+
+      - major: matematicas
+        description: Estudio de estructuras y patrones.
+
+      - major: microbiologia
+        description: Investigación de microorganismos.
+
+      - major: quimica
+        description: Estudio de la composición y propiedades de la materia.
+
+      - major: medicina
+        description: Diagnóstico y tratamiento de enfermedades.
+
+      - major: arquitectura
+        description: Diseño y planificación de espacios.
+
+      - major: arte
+        description: Profundización en disciplinas artísticas.
+
+      - major: diseño
+        description: Creación de soluciones estéticas y funcionales.
+
+      - major: historia del arte
+        description: Estudio de la evolución de las artes visuales.
+
+      - major: literatura
+        description: Análisis y creación de obras literarias.
+
+      - major: musica
+        description: Formación en interpretación y creación musical.
+
+      - major: narrativas digitales
+        description: Contar historias en plataformas digitales.
+
+      - major: ingenieria ambiental
+        description: Protección y gestión del medio ambiente.
+
+      - major: ingenieria civil
+        description: Diseño y construcción de infraestructuras.
+
+      - major: ingenieria electrica
+        description: Estudio de sistemas eléctricos.
+
+      - major: ingenieria electronica
+        description: Diseño de sistemas electrónicos.
+
+      - major: ingenieria industrial
+        description: Optimización de procesos empresariales.
+
+      - major: ingenieria mecanica
+        description: Diseño y análisis de sistemas mecánicos.
+
+      - major: ingenieria quimica
+        description: Producción de materiales y sustancias.
+
+      - major: ingenieria de sistemas y computacion
+        description: Desarrollo de software y sistemas informáticos.
+
+      - major: derecho
+        description: Interpretación y aplicación de leyes.
+
+      - major: antropologia
+        description: Estudio de la humanidad y su cultura.
+
+      - major: ciencia politica
+        description: Análisis de sistemas y teorías políticas.
+
+      - major: estudios globales
+        description: Estudio no especificado. (No hay entrada en el JSON)
+
+      - major: filosofia
+        description: Exploración de cuestiones fundamentales.
+
+      - major: historia
+        description: Investigación y análisis de eventos pasados.
+
+      - major: lenguas y cultura
+        description: Estudio de lenguas y su contexto cultural.
+
+      - major: psicologia
+        description: Estudio del comportamiento y procesos mentales. También incluye temas de recursos humanos o de reclutamiento y selección de personal.
+
+      - major: licenciatura en artes
+        description: Formación en artes visuales y escénicas.
+
+      - major: licenciatura en biologia
+        description: Enseñanza y aplicación de conceptos biológicos.
+
+      - major: licenciatura en educacion infantil
+        description: Formación en enseñanza para niños pequeños.
+
+      - major: licenciatura en español y filologia
+        description: Estudio del español y la investigación filológica.
+
+      - major: licenciatura en filosofia
+        description: Preparación en pensamiento crítico.
+
+      - major: licenciatura en fisica
+        description: Enseñanza y aplicación de la física.
+
+      - major: licenciatura en historia
+        description: Investigación y enseñanza de la historia.
+
+      - major: licenciatura en matematicas
+        description: Enseñanza y aplicación de conceptos matemáticos.
+
+      - major: licenciatura en quimica
+        description: Enseñanza y aplicación de la química.
+
+    mongo_collections:
+      projects: projects
+      resumes: usercvs
+      parsed_projects: ParsedProjects
+      parsed_resumes: ParsedResumes
+
+    mongo_databases:
+      app: development
+      ai: MatchingMLModel
+
+    postgres_tables:
+      compatibilities: uniandes_compatibility_percentages
+      project_filters: uniandes_project_filters
