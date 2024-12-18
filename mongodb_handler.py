@@ -38,7 +38,7 @@ class MongoDBConnection:
 
 class MongoDBHandler:
     def __init__(self):
-        config = self.load_config("C:/Users/juanf/Documents/Coally/job_classifier/api/config.yaml")
+        config = self.load_config("./config.yaml")
         self.app_database_name = config.get("mongo_databases", {}).get("app")
         self.projects_collection_name = config.get("mongo_collections", {}).get("projects")
         self.resumes_collection_name = config.get("mongo_collections", {}).get("resumes")

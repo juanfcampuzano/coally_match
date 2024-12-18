@@ -1,1 +1,10 @@
 psycopg2-binary
+pymongo
+uvicorn
+fastapi
+python-dotenv
+PyYAML
+numpy
+scikit-learn
+langchain-openai
+langchain
