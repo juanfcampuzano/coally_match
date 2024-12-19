@@ -163,4 +163,4 @@ class MongoDBHandler:
         query = {"id": ObjectId(id_resume)}
         with MongoDBConnection() as mongo:
             result = mongo.connection[self.ml_database_name][self.parsed_resumes_collection_name].find_one(query)
-        return len(result) > 0
+        return result is not None and len(result) > 0
