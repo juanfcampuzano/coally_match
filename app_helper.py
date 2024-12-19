@@ -75,6 +75,10 @@ class AppHelper:
             collection="projects",
             search_list=majors
         )
+        import logging
+
+        logging.info("compatible_projects")
+        logging.info(compatible_projects)
         
         compatibilities = {
             str(project['id']): max(0, min(self.calculate_compatibility(parsed_resume=parsed_resume, parsed_project=project, model=model), 100))
