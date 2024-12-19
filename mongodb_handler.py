@@ -140,22 +140,23 @@ class MongoDBHandler:
             return ''
         
         job_titles = []
-        for exp in cv.get('experiencia', []):
-            positions = exp.get('cargos', [])
-            
-            if isinstance(positions, list) and positions:
-                for position in positions:
-                    job_title = position.get('nombrecargo', 'Sin título de cargo')
-                    job_titles.append(job_title)
-            
-            start_date = exp.get('fecha_inicio')
-            end_date = exp.get('fecha_finalizacion')
-            if start_date and end_date:
-                job_titles.append(f"From {start_date} to {end_date}")
-            elif start_date:
-                job_titles.append(f"From {start_date}")
-            elif end_date:
-                job_titles.append(f"Until {end_date}")
+        if cv.get('experiencia') is not None:
+            for exp in cv.get('experiencia', []):
+                positions = exp.get('cargos', [])
+                
+                if isinstance(positions, list) and positions:
+                    for position in positions:
+                        job_title = position.get('nombrecargo', 'Sin título de cargo')
+                        job_titles.append(job_title)
+                
+                start_date = exp.get('fecha_inicio')
+                end_date = exp.get('fecha_finalizacion')
+                if start_date and end_date:
+                    job_titles.append(f"From {start_date} to {end_date}")
+                elif start_date:
+                    job_titles.append(f"From {start_date}")
+                elif end_date:
+                    job_titles.append(f"Until {end_date}")
         
         return ', '.join(job_titles) if job_titles else 'No experience available'
     
