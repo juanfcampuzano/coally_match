@@ -132,8 +132,8 @@ class MongoDBHandler:
 
         with MongoDBConnection() as mongo:
             result = mongo.connection[self.ml_database_name][collection_name].find(query)
-            for doc in result:
-                yield doc
+            return result
+        return []
 
     def parse_experience(self, cv):
         if not isinstance(cv, dict) or 'experiencia' not in cv:

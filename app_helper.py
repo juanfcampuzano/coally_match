@@ -61,8 +61,6 @@ class AppHelper:
             collection="resumes",
             search_list=majors
         ))
-        self.logger.info("compatible_resumes")
-        self.logger.info(compatible_resumes)
         
         compatibilities = {
             str(resume['id']): max(0, min(self.calculate_compatibility(parsed_resume=resume, parsed_project=parsed_project, model=model), 100))
@@ -77,8 +75,6 @@ class AppHelper:
             collection="projects",
             search_list=majors
         )
-        self.logger.info("compatible_projects")
-        self.logger.info(compatible_projects)
         
         compatibilities = {
             str(project['id']): max(0, min(self.calculate_compatibility(parsed_resume=parsed_resume, parsed_project=project, model=model), 100))
