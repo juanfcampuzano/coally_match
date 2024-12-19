@@ -158,3 +158,8 @@ class MongoDBHandler:
                 job_titles.append(f"Until {end_date}")
         
         return ', '.join(job_titles) if job_titles else 'No experience available'
+    
+    def find_parsed_resume(self, id_resume: str) -> bool:
+        query = {"id": ObjectId(id_resume)}
+        result = self.mongo.connection[self.ml_database_name][self.parsed_resumes_collection_name].find_one(query)
+        return len(result) > 0

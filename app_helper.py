@@ -85,10 +85,16 @@ class AppHelper:
         }
         return compatibilities
 
-
+    def resume_exists(self, id_resume):
+        return self.mongo_handler.find_parsed_resume(id_resume)
     
-    def create_resume(self, request):
+    def create_resume(self, request, method="post"):
         id_resume = request.id_cv
+
+        if method == "post" and self.resume_exists(id_resume):
+            self.logger.info(f"Resume {id_resume} already exists.")
+            return False
+        
         parsed_resume = self.parse_resume(id_resume)
 
         if not parsed_resume:

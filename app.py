@@ -55,7 +55,7 @@ def add_project(request: CreateProjectRequest):
 @handle_exception(logger)
 @app.post("/api/resume")
 def add_cv(request: CreateResumeRequest):
-    created = app_helper.create_resume(request)
+    created = app_helper.create_resume(request, method="post")
     if created:
         logger.info(f"Created resume with id {request.id_cv}")
         return {"message": f"Created resume with id {request.id_cv}"}
@@ -65,7 +65,7 @@ def add_cv(request: CreateResumeRequest):
 @handle_exception(logger)
 @app.put("/api/resume")
 def update_cv(request: CreateResumeRequest):
-    created = app_helper.create_resume(request)
+    created = app_helper.create_resume(request, method="put")
     if created:
         logger.info(f"Updated resume with id {request.id_cv}")
         return {"message": f"Updated resume with id {request.id_cv}"}
