@@ -62,8 +62,6 @@ class PostgresHandler:
         insert_count = 0
         values_to_insert = []
 
-        logger.info(compatibilities)
-
         if entity_type == "resume":
             for project_id, percentage in compatibilities.items():
                 percentage = float(percentage)
