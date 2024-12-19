@@ -11,7 +11,6 @@ load_dotenv()
 
 logger = AppLogger('MongoDB Handler').get_logger()
 
-
 class MongoDBConnection:
     def __init__(self):
         self.put_uri = os.environ.get("PUT_MONGO_URI")
@@ -38,7 +37,7 @@ class MongoDBConnection:
 
 class MongoDBHandler:
     def __init__(self):
-        config = self.load_config("./config.yaml")
+        config = self._load_config("./config.yaml")
         self.app_database_name = config.get("mongo_databases", {}).get("app")
         self.projects_collection_name = config.get("mongo_collections", {}).get("projects")
         self.resumes_collection_name = config.get("mongo_collections", {}).get("resumes")
@@ -46,28 +45,30 @@ class MongoDBHandler:
         self.parsed_projects_collection_name = config.get("mongo_collections", {}).get("parsed_projects")
         self.parsed_resumes_collection_name = config.get("mongo_collections", {}).get("parsed_resumes")
 
-    def load_config(self, file_path):
-        with open(file_path, 'r', encoding='utf-8') as file:
-            config = yaml.safe_load(file)
-        client = os.getenv("CLIENT")
-        client_config = config['clients'].get(client, None)
-        if client_config:
+    @staticmethod
+    def _load_config(file_path):
+        try:
+            with open(file_path, 'r', encoding='utf-8') as file:
+                config = yaml.safe_load(file)
+            client = os.getenv("CLIENT")
+            client_config = config['clients'].get(client)
+            if not client_config:
+                raise ValueError(f"Cliente '{client}' no encontrado en el archivo de configuración.")
             return client_config
-        else:
-            raise ValueError(f"Cliente '{client}' no encontrado en el archivo de configuración.")
+        except FileNotFoundError:
+            logger.error(f"El archivo de configuración no se encontró: {file_path}")
+            raise
+        except Exception as e:
+            logger.error(f"Error cargando la configuración: {e}")
+            raise
 
     def get_project(self, project_id):
-        query = {
-            "_id": ObjectId(project_id)
-        }
-
+        query = {"_id": ObjectId(project_id)}
         with MongoDBConnection() as mongo:
             found_project = mongo.old_connection[self.app_database_name][self.projects_collection_name].find_one(query)
-
-            if found_project is None:
+            if not found_project:
                 logger.warning(f"Couldn't find project with ID {project_id}")
                 return {}
-            
             return {
                 "project_name": found_project.get("NombreOportunidad"),
                 "project_description": found_project.get("DescribeProyecto"),
@@ -81,73 +82,46 @@ class MongoDBHandler:
             }
 
     def get_resume(self, resume_id):
-        query = {
-            "_id": ObjectId(resume_id)
-        }
-
+        query = {"_id": ObjectId(resume_id)}
         with MongoDBConnection() as mongo:
             found_cv = mongo.old_connection[self.app_database_name][self.resumes_collection_name].find_one(query)
-
-            if found_cv is None:
+            if not found_cv:
                 logger.warning(f"Couldn't find resume with ID {resume_id}")
                 return {}
-            
             return {
                 "main_skills": found_cv.get("aptitudes_principales"),
                 "resume_abstract": found_cv.get("extracto"),
                 "education": [edu.get("Titulo_Certificacion", "") for edu in found_cv.get("educacion", [])],
-                "experience": self.parse_experience(found_cv),
+                "experience": self._parse_experience(found_cv),
                 "current_position": found_cv.get("info_personal", {}).get("profesion_actual")
             }
 
     def upsert_parsed_document(self, document, collection):
-        query = {
-            "id": document["id"]
-        }
-
-        if collection == "projects":
-            collection_name = self.parsed_projects_collection_name
-        else:
-            collection_name = self.parsed_resumes_collection_name
-
+        query = {"id": document["id"]}
+        collection_name = self.parsed_projects_collection_name if collection == "projects" else self.parsed_resumes_collection_name
         with MongoDBConnection() as mongo:
             result = mongo.connection[self.ml_database_name][collection_name].update_one(query, {"$set": document}, upsert=True)
-
             if result.upserted_id:
                 logger.debug(f"Inserted new document with ID: {result.upserted_id}")
             else:
                 logger.debug("Updated document.")
 
     def find_documents_with_matching_items(self, collection, search_list):
-        query = {
-            "majors": {
-                "$in": search_list
-            }
-        }
-
-        if collection == "projects":
-            collection_name = self.projects_collection_name
-        else:
-            collection_name = self.resumes_collection_name
-
+        query = {"majors": {"$in": search_list}}
+        collection_name = self.projects_collection_name if collection == "projects" else self.resumes_collection_name
         with MongoDBConnection() as mongo:
-            result = mongo.connection[self.ml_database_name][collection_name].find(query)
-            return result
-        return []
+            return list(mongo.connection[self.ml_database_name][collection_name].find(query))
 
-    def parse_experience(self, cv):
+    @staticmethod
+    def _parse_experience(cv):
         if not isinstance(cv, dict) or 'experiencia' not in cv:
-            return ''
-        
+            return 'No experience available'
         job_titles = []
         for exp in cv.get('experiencia', []):
             positions = exp.get('cargos', [])
-            
-            if isinstance(positions, list) and positions:
+            if isinstance(positions, list):
                 for position in positions:
-                    job_title = position.get('nombrecargo', 'Sin título de cargo')
-                    job_titles.append(job_title)
-            
+                    job_titles.append(position.get('nombrecargo', 'Sin título de cargo'))
             start_date = exp.get('fecha_inicio')
             end_date = exp.get('fecha_finalizacion')
             if start_date and end_date:
@@ -156,5 +130,4 @@ class MongoDBHandler:
                 job_titles.append(f"From {start_date}")
             elif end_date:
                 job_titles.append(f"Until {end_date}")
-        
         return ', '.join(job_titles) if job_titles else 'No experience available'
