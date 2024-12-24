@@ -18,6 +18,9 @@ import json
 import time
 import re
 
+import yaml
+import os
+
 logger = AppLogger("App").get_logger()
 
 load_dotenv()
@@ -25,7 +28,20 @@ load_dotenv()
 app = FastAPI(docs_url="/api/docs")
 
 sqs = boto3.client("sqs", region_name="us-east-2")
-QUEUE_URL = "https://sqs.us-east-2.amazonaws.com/203152832070/ml_empleo_uniandes.fifo"
+
+def load_config(file_path):
+    with open(file_path, 'r', encoding='utf-8') as file:
+        config = yaml.safe_load(file)
+    client = os.getenv("CLIENT")
+    client_config = config['clients'].get(client, None)
+    if client_config:
+        return client_config
+    else:
+        raise ValueError(f"Cliente '{client}' no encontrado en el archivo de configuración.")
+    
+config = load_config("./config.yaml")
+
+QUEUE_URL = config.get("sqs_url")
 
 app.add_middleware(
     CORSMiddleware,
