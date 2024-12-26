@@ -63,60 +63,60 @@ async def health():
 def add_project(request: CreateProjectRequest):
     created = app_helper.create_project(request)
     if created:
-        logger.info(f"Created project with id {request.id_project}")
-        return {"message": f"Created project with id {request.id_project}"}
-    logger.warning(f"Couldn't create project with id {request.id_project}. It is an external project")
-    return {"message": f"Couldn't create project with id {request.id_project}. It is an external project"}
+        logger.info(f"Created project with id {request.id}")
+        return {"message": f"Created project with id {request.id}"}
+    logger.warning(f"Couldn't create project with id {request.id}. It is an external project")
+    return {"message": f"Couldn't create project with id {request.id}. It is an external project"}
 
 @handle_exception(logger)
 @app.post("/api/resume")
 def add_cv(request: CreateResumeRequest):
     created = app_helper.create_resume(request, method="post")
     if created:
-        logger.info(f"Created resume with id {request.id_cv}")
-        return {"message": f"Created resume with id {request.id_cv}"}
-    logger.warning(f"Couldn't create resume with id {request.id_cv}.")
-    return {"message": f"Couldn't create resume with id {request.id_cv}."}
+        logger.info(f"Created resume with id {request.id}")
+        return {"message": f"Created resume with id {request.id}"}
+    logger.warning(f"Couldn't create resume with id {request.id}.")
+    return {"message": f"Couldn't create resume with id {request.id}."}
 
 @handle_exception(logger)
 @app.put("/api/resume")
 def update_cv(request: CreateResumeRequest):
     created = app_helper.create_resume(request, method="put")
     if created:
-        logger.info(f"Updated resume with id {request.id_cv}")
-        return {"message": f"Updated resume with id {request.id_cv}"}
-    logger.warning(f"Couldn't update resume with id {request.id_cv}.")
-    return {"message": f"Couldn't update resume with id {request.id_cv}."}
+        logger.info(f"Updated resume with id {request.id}")
+        return {"message": f"Updated resume with id {request.id}"}
+    logger.warning(f"Couldn't update resume with id {request.id}.")
+    return {"message": f"Couldn't update resume with id {request.id}."}
 
 @handle_exception(logger)
 @app.put("/api/project")
 def update_project(request: CreateProjectRequest):
     created = app_helper.create_project(request)
     if created:
-        logger.info(f"Updated project with id {request.id_project}")
-        return {"message": f"Updated project with id {request.id_project}"}
-    logger.warning(f"Couldn't update project with id {request.id_project}. It is an external project")
-    return {"message": f"Couldn't update project with id {request.id_project}. It is an external project"}
+        logger.info(f"Updated project with id {request.id}")
+        return {"message": f"Updated project with id {request.id}"}
+    logger.warning(f"Couldn't update project with id {request.id}. It is an external project")
+    return {"message": f"Couldn't update project with id {request.id}. It is an external project"}
 
 @handle_exception(logger)
 @app.delete("/api/project")
 def delete_project(request: DeleteProjectRequest):
     deleted = app_helper.perform_delete_project(request)
     if deleted:
-        logger.info(f"Deleted project with id {request.id_project}")
-        return {"message": f"Deleted project with id {request.id_project}"}
-    logger.warning(f"Couldn't delete project with id {request.id_project}. It is an external project")
-    return {"message": f"Couldn't delete project with id {request.id_project}. It is an external project"}
+        logger.info(f"Deleted project with id {request.id}")
+        return {"message": f"Deleted project with id {request.id}"}
+    logger.warning(f"Couldn't delete project with id {request.id}. It is an external project")
+    return {"message": f"Couldn't delete project with id {request.id}. It is an external project"}
 
 @handle_exception(logger)
 @app.delete("/api/resume")
 def delete_resume(request: DeleteResumeRequest):
     created = app_helper.perform_delete_resume(request)
     if created:
-        logger.info(f"Updated resume with id {request.id_cv}")
-        return {"message": f"Updated resume with id {request.id_cv}"}
-    logger.warning(f"Couldn't update resume with id {request.id_cv}.")
-    return {"message": f"Couldn't update resume with id {request.id_cv}."}
+        logger.info(f"Updated resume with id {request.id}")
+        return {"message": f"Updated resume with id {request.id}"}
+    logger.warning(f"Couldn't update resume with id {request.id}.")
+    return {"message": f"Couldn't update resume with id {request.id}."}
 
 def limpiar_json(json_sucio):
     json_limpio = re.sub(r'\\[nrt]', '', json_sucio)
