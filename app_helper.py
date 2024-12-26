@@ -89,7 +89,7 @@ class AppHelper:
         return self.mongo_handler.find_parsed_resume(id_resume)
     
     def create_resume(self, request, method="post"):
-        id_resume = request.id_cv
+        id_resume = request.id
 
         if method == "post" and self.resume_exists(id_resume):
             self.logger.info(f"Resume {id_resume} already exists.")
@@ -107,7 +107,7 @@ class AppHelper:
 
 
     def create_project(self, request):
-        id_project = request.id_project
+        id_project = request.id
         parsed_project = self.parse_project(id_project)
         if not parsed_project or parsed_project.get("source") == "externo":
             return False
