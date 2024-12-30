@@ -1,20 +1,12 @@
 clients:
   coally:
     majors:
-      - major: ingeniería química
-        description: Diseño y operación de procesos químicos.
-      - major: ingeniería civil
-        description: Construcción y mantenimiento de infraestructuras.
-      - major: ingeniería industrial
-        description: Optimización de sistemas y procesos empresariales.
-      - major: ingeniería de sistemas
-        description: Desarrollo y gestión de sistemas informáticos, ciencias de la computación, software.
       - major: administración de empresas
-        description: Gestión de recursos en organizaciones.
+        description: Gestión de recursos en organizaciones y empresas.
       - major: arquitectura
-        description: Diseño y planificación de espacios.
+        description: Diseño y planificación de espacios arquitectónicos.
       - major: diseño
-        description: Creación de soluciones estéticas y funcionales.
+        description: Creación de soluciones estéticas y funcionales, diseño gráfico, diseño industrial, diseño UI o de interfaces.
       - major: maestría en arte
         description: Profundización en disciplinas artísticas.
       - major: historia del arte
@@ -26,77 +18,77 @@ clients:
       - major: narración digital
         description: Contar historias en plataformas digitales.
       - major: biología
-        description: Estudio de organismos y sus interacciones.
+        description: Estudio de organismos vivos y sus interacciones (plantas, animales), biología.
       - major: física
-        description: Estudio de principios y leyes del universo.
+        description: Estudio de principios y leyes del universo (física).
       - major: geociencias
-        description: Estudio de la Tierra y sus procesos.
+        description: Estudio de la Tierra y sus procesos (geociencias), estudio de suelos, etc.
       - major: matemáticas
-        description: Estudio de estructuras y patrones.
+        description: Estudio de estructuras, números, patrones, probabilidades, estadística, etc (matemáticas).
       - major: microbiología
-        description: Investigación de microorganismos.
+        description: Investigación de microorganismos (microbiología).
       - major: química
-        description: Estudio de la composición y propiedades de la materia.
+        description: Estudio de la composición y propiedades de la materia (química).
       - major: antropología
         description: Estudio de la humanidad y su cultura.
       - major: ciencia política
         description: Análisis de sistemas y teorías políticas.
       - major: filosofía
-        description: Exploración de cuestiones fundamentales.
+        description: Exploración de cuestiones fundamentales (filosofía).
       - major: historia
         description: Investigación y análisis de eventos pasados.
       - major: profesional en lenguas y cultura
         description: Estudio de lenguas y su contexto cultural.
       - major: psicología
-        description: Estudio del comportamiento y procesos mentales. También incluye temas de recursos humanos o de reclutamiento y selección de personal.
+        description: Estudio del comportamiento y procesos mentales. También incluye temas de recursos humanos o de reclutamiento y selección de personal, terapia y consejería, psicoorientación.
       - major: derecho
-        description: Interpretación y aplicación de leyes.
+        description: Interpretación y aplicación de leyes, abogados, etc..
       - major: economía
-        description: Estudio de producción y consumo.
+        description: Economista, análisis de microeconomía, macroeconomía, etc.
       - major: gobierno y asuntos públicos
-        description: Gestión y análisis de políticas públicas.
+        description: Gestión y análisis de políticas públicas, estudios de gobierno.
       - major: licenciatura en matemáticas
-        description: Enseñanza y aplicación de conceptos matemáticos.
+        description: Preparación para ser un docente (profesor) de matemáticas.
       - major: licenciatura en química
-        description: Enseñanza y aplicación de la química.
+        description: Preparación para ser un docente (profesor) de química.
       - major: licenciatura en español y filología
-        description: Estudio del español y la investigación filológica.
+        description: Preparación para ser un docente (profesor) de español o filología.
       - major: licenciatura en biología
-        description: Enseñanza y aplicación de conceptos biológicos.
+        description: Preparación para ser un docente (profesor) de biología.
       - major: licenciatura en educación infantil
-        description: Formación en enseñanza para niños pequeños.
+        description: Preparación para ser un docente de niños.
       - major: licenciatura en física
-        description: Enseñanza y aplicación de la física.
+        description: Preparación para ser un docente (profesor) de física.
       - major: licenciatura en historia
-        description: Investigación y enseñanza de la historia.
+        description: Preparación para ser un docente (profesor) de historia.
       - major: licenciatura en artes
-        description: Formación en artes visuales y escénicas.
+        description: Preparación para ser un docente (profesor) de artes.
       - major: licenciatura en filosofía
-        description: Preparación en pensamiento crítico.
+        description: Preparación para ser un docente (profesor) de filosofía.
       - major: ingeniería ambiental
-        description: Protección y gestión del medio ambiente.
+        description: Protección y gestión del medio ambiente, estudios también de aguas, o del medioambiente.
       - major: ingeniería biomédica
-        description: Desarrollo de tecnologías para la salud.
+        description: Desarrollo de tecnologías para la salud con ingeniería, como prótesis, sangre artificial, etc.
       - major: ingeniería civil
-        description: Diseño y construcción de infraestructuras.
+        description: Diseño y construcción de infraestructuras, edificios, son residentes de obras, etc.
       - major: ingeniería electrónica
-        description: Diseño de sistemas electrónicos.
+        description: Diseño de sistemas electrónicos, control, robótica, automatización.
       - major: ingeniería eléctrica
-        description: Estudio de sistemas eléctricos.
+        description: Estudio de sistemas eléctricos y energía eléctrica.
       - major: ingeniería industrial
-        description: Optimización de procesos empresariales.
+        description: Optimización de procesos empresariales (está relacionado con administrción de empresas).
       - major: ingeniería mecánica
         description: Diseño y análisis de sistemas mecánicos.
       - major: ingeniería química
-        description: Producción de materiales y sustancias.
+        description: Producción de materiales y sustancias (ingenieros químicos, etc).
       - major: ingeniería de alimentos
-        description: Producción y conservación de alimentos.
+        description: Producción y conservación de alimentos (esta relacionado a ingeniería química).
       - major: ingeniería de sistemas y computación
-        description: Desarrollo de software y sistemas informáticos.
+        description: Desarrollo de software y sistemas informáticos (programadores, servidores, desarrollo movil, web, etc.). Ciencias de la computación, bases de datos, etc.
       - major: medicina
-        description: Diagnóstico y tratamiento de enfermedades.
+        description: Diagnóstico y tratamiento de enfermedades (médicos, doctores).
       - major: enfermería
-        description: Cuidado y atención de la salud de pacientes.
+        description: Cuidado y atención de la salud de pacientes (enfermeros, enfermería, asistentes de laboratorio en clinicas y hospitales).
       - major: negocios internacionales
         description: Estudio de comercio y relaciones entre mercados globales.
       - major: trabajos operativos
@@ -121,43 +113,43 @@ clients:
   uniandes:
     majors:
       - major: administracion
-        description: Gestión de recursos en organizaciones.
+        description: Gestión de recursos en organizaciones y empresas.
 
       - major: economia
-        description: Estudio de producción y consumo.
+        description: Economista, análisis de microeconomía, macroeconomía, etc.
 
       - major: gobierno y asuntos publicos
-        description: Gestión y análisis de políticas públicas.
+        description: Gestión y análisis de políticas públicas, estudios de gobierno.
 
       - major: biologia
-        description: Estudio de organismos y sus interacciones.
+        description: Estudio de organismos vivos y sus interacciones (plantas, animales), biología.
 
       - major: fisica
-        description: Estudio de principios y leyes del universo.
+        description: Estudio de principios y leyes del universo (física).
 
       - major: geociencias
-        description: Estudio de la Tierra y sus procesos.
+        description: Estudio de la Tierra y sus procesos (geociencias), estudio de suelos, etc.
 
       - major: matematicas
-        description: Estudio de estructuras y patrones.
+        description: Estudio de estructuras, números, patrones, probabilidades, estadística, etc (matemáticas).
 
       - major: microbiologia
-        description: Investigación de microorganismos.
+        description: Investigación de microorganismos (microbiología).
 
       - major: quimica
-        description: Estudio de la composición y propiedades de la materia.
+        description: Estudio de la composición y propiedades de la materia (química).
 
       - major: medicina
-        description: Diagnóstico y tratamiento de enfermedades.
+        description: Diagnóstico y tratamiento de enfermedades (médicos, doctores).
 
       - major: arquitectura
-        description: Diseño y planificación de espacios.
+        description: Diseño y planificación de espacios arquitectónicos.
 
       - major: arte
         description: Profundización en disciplinas artísticas.
 
       - major: diseño
-        description: Creación de soluciones estéticas y funcionales.
+        description: Creación de soluciones estéticas y funcionales, diseño gráfico, diseño industrial, diseño UI o de interfaces.
 
       - major: historia del arte
         description: Estudio de la evolución de las artes visuales.
@@ -172,31 +164,31 @@ clients:
         description: Contar historias en plataformas digitales.
 
       - major: ingenieria ambiental
-        description: Protección y gestión del medio ambiente.
+        description: Protección y gestión del medio ambiente, estudios también de aguas, o del medioambiente.
 
       - major: ingenieria civil
-        description: Diseño y construcción de infraestructuras.
+        description: Diseño y construcción de infraestructuras, edificios, son residentes de obras, etc.
 
       - major: ingenieria electrica
-        description: Estudio de sistemas eléctricos.
+        description: Estudio de sistemas eléctricos y energía eléctrica.
 
       - major: ingenieria electronica
-        description: Diseño de sistemas electrónicos.
+        description: Diseño de sistemas electrónicos, control, robótica, automatización.
 
       - major: ingenieria industrial
-        description: Optimización de procesos empresariales.
+        description: Optimización de procesos empresariales (está relacionado con administrción de empresas).
 
       - major: ingenieria mecanica
         description: Diseño y análisis de sistemas mecánicos.
 
       - major: ingenieria quimica
-        description: Producción de materiales y sustancias.
+        description: Producción de materiales y sustancias (ingenieros químicos, etc).
 
       - major: ingenieria de sistemas y computacion
-        description: Desarrollo de software y sistemas informáticos.
+        description: Desarrollo de software y sistemas informáticos (programadores, servidores, desarrollo movil, web, etc.). Ciencias de la computación, bases de datos, etc.
 
       - major: derecho
-        description: Interpretación y aplicación de leyes.
+        description: Interpretación y aplicación de leyes, abogados, etc.
 
       - major: antropologia
         description: Estudio de la humanidad y su cultura.
@@ -205,10 +197,10 @@ clients:
         description: Análisis de sistemas y teorías políticas.
 
       - major: estudios globales
-        description: Estudio no especificado. (No hay entrada en el JSON)
+        description: **Sin descripción disponible.**
 
       - major: filosofia
-        description: Exploración de cuestiones fundamentales.
+        description: Exploración de cuestiones fundamentales (filosofía).
 
       - major: historia
         description: Investigación y análisis de eventos pasados.
@@ -217,34 +209,35 @@ clients:
         description: Estudio de lenguas y su contexto cultural.
 
       - major: psicologia
-        description: Estudio del comportamiento y procesos mentales. También incluye temas de recursos humanos o de reclutamiento y selección de personal.
+        description: Estudio del comportamiento y procesos mentales. También incluye temas de recursos humanos o de reclutamiento y selección de personal, terapia y consejería, psicoorientación.
 
       - major: licenciatura en artes
-        description: Formación en artes visuales y escénicas.
+        description: Preparación para ser un docente (profesor) de artes.
 
       - major: licenciatura en biologia
-        description: Enseñanza y aplicación de conceptos biológicos.
+        description: Preparación para ser un docente (profesor) de biología.
 
       - major: licenciatura en educacion infantil
-        description: Formación en enseñanza para niños pequeños.
+        description: Preparación para ser un docente de niños.
 
       - major: licenciatura en español y filologia
-        description: Estudio del español y la investigación filológica.
+        description: Preparación para ser un docente (profesor) de español o filología.
 
       - major: licenciatura en filosofia
-        description: Preparación en pensamiento crítico.
+        description: Preparación para ser un docente (profesor) de filosofía.
 
       - major: licenciatura en fisica
-        description: Enseñanza y aplicación de la física.
+        description: Preparación para ser un docente (profesor) de física.
 
       - major: licenciatura en historia
-        description: Investigación y enseñanza de la historia.
+        description: Preparación para ser un docente (profesor) de historia.
 
       - major: licenciatura en matematicas
-        description: Enseñanza y aplicación de conceptos matemáticos.
+        description: Preparación para ser un docente (profesor) de matemáticas.
 
       - major: licenciatura en quimica
-        description: Enseñanza y aplicación de la química.
+        description: Preparación para ser un docente (profesor) de química.
+
 
     mongo_collections:
       projects: projects
