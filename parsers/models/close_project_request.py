@@ -1,4 +1,4 @@
 from pydantic import BaseModel
 
-class UpdateResumeRequest(BaseModel):
+class CloseProjectRequest(BaseModel):
     id: str

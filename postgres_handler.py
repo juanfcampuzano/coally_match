@@ -147,26 +147,74 @@ class PostgresHandler:
 
     def delete_project(self, project_id):
         try:
-            query = f"DELETE FROM public.{self.project_filters_table} WHERE project_id = %s"
+            query = f"DELETE FROM public.{self.project_filters_table} WHERE project_id = '%s'"
             self.cur.execute(query, (project_id,))
 
-            query2 = f"DELETE FROM public.{self.compatibility_table} WHERE project_id = %s"
+            query2 = f"DELETE FROM public.{self.compatibility_table} WHERE project_id = '%s'"
             self.cur.execute(query2, (project_id,))
 
+            self.conn.commit()
+
             logger.info(f"Deleted project with id {project_id}")
+
+            return True
 
         except Exception as e:
             self.conn.rollback()
             logger.error(f"Error deleting project with id {project_id}: {e}")
+            return False
 
 
     def delete_resume(self, resume_id):
         try:
-            query = f"DELETE FROM public.{self.compatibility_table} WHERE project_id = %s"
+            query = f"DELETE FROM public.{self.compatibility_table} WHERE resume_id = '%s'"
             self.cur.execute(query, (resume_id,))
 
+            self.conn.commit()
+
             logger.info(f"Deleted resume with id {resume_id}")
+            return True
 
         except Exception as e:
             self.conn.rollback()
             logger.error(f"Error deleting resume with id {resume_id}: {e}")
+            return False
+        
+
+    def update_project_status(self, project_id, status):
+        query = f"""
+        UPDATE public.{self.project_filters_table}
+        SET status = %s
+        WHERE project_id = %s
+        """
+
+        try:
+            self.cur.execute(query, (status, project_id))
+            if self.cur.rowcount > 0:
+                logger.debug(f"Updated status for project with ID {project_id} to {status}")
+                return True
+            else:
+                logger.warning(f"Project ID {project_id} not found. No status updated.")
+                return False
+        except Exception as e:
+            logger.error(f"Error during updating project status for project ID {project_id}: {e}")
+            return False
+
+    def update_project_approved_by(self, project_id, approved_by):
+        query = f"""
+        UPDATE public.{self.project_filters_table}
+        SET approved_by = %s
+        WHERE project_id = %s
+        """
+
+        try:
+            self.cur.execute(query, (approved_by, project_id))
+            if self.cur.rowcount > 0:
+                logger.debug(f"Updated approved_by for project with ID {project_id} to {approved_by}")
+                return True
+            else:
+                logger.warning(f"Project ID {project_id} not found. No approved_by updated.")
+                return False
+        except Exception as e:
+            logger.error(f"Error during updating approved_by for project ID {project_id}: {e}")
+            return False

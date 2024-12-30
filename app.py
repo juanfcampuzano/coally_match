@@ -5,11 +5,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 from parsers.models.create_resume_request import CreateResumeRequest
 from parsers.models.create_project_request import CreateProjectRequest
-from parsers.models.update_project_filters_request import UpdateProjectRequest
 from parsers.models.update_resume_request import UpdateResumeRequest
+from parsers.models.update_project_request import UpdateProjectRequest
 from parsers.models.delete_project_request import DeleteProjectRequest
 from parsers.models.delete_resume_request import DeleteResumeRequest
-from parsers.models.message_request import MessageRequest
+from parsers.models.close_project_request import CloseProjectRequest
+from parsers.models.modify_approvals_project_request import ModifyApprovalsProjectRequest
 from parsers.decorators import handle_exception
 from parsers.logger import AppLogger
 from app_helper import AppHelper
@@ -80,7 +81,7 @@ def add_cv(request: CreateResumeRequest):
 
 @handle_exception(logger)
 @app.put("/api/resume")
-def update_cv(request: CreateResumeRequest):
+def update_cv(request: UpdateResumeRequest):
     created = app_helper.create_resume(request, method="put")
     if created:
         logger.info(f"Updated resume with id {request.id}")
@@ -90,7 +91,7 @@ def update_cv(request: CreateResumeRequest):
 
 @handle_exception(logger)
 @app.put("/api/project")
-def update_project(request: CreateProjectRequest):
+def update_project(request: UpdateProjectRequest):
     created = app_helper.create_project(request)
     if created:
         logger.info(f"Updated project with id {request.id}")
@@ -118,6 +119,26 @@ def delete_resume(request: DeleteResumeRequest):
     logger.warning(f"Couldn't update resume with id {request.id}.")
     return {"message": f"Couldn't update resume with id {request.id}."}
 
+@handle_exception(logger)
+@app.patch("/api/project/close")
+def close_project(request: CloseProjectRequest):
+    closed = app_helper.perform_close_project(request)
+    if closed:
+        logger.info(f"Closed project with id {request.id}")
+        return {"message": f"Closed project with id {request.id}"}
+    logger.warning(f"Couldn't close project with id {request.id}.")
+    return {"message": f"Couldn't close project with id {request.id}."}
+
+@handle_exception(logger)
+@app.patch("/api/project/approvedby")
+def modify_approved_institutions(request: ModifyApprovalsProjectRequest):
+    updated = app_helper.perform_modify_approved_institutions(request)
+    if updated:
+        logger.info(f"Modified approvals for project with id {request.id}")
+        return {"message": f"Modified approvals for project with id {request.id}"}
+    logger.warning(f"Couldn't modify approvals for project with id {request.id}.")
+    return {"message": f"Couldn't modify approvals for project with id {request.id}."}
+
 def limpiar_json(json_sucio):
     json_limpio = re.sub(r'\\[nrt]', '', json_sucio)
     json_limpio = re.sub(r'\\"', '"', json_limpio)
@@ -139,14 +160,18 @@ def process_message(message_body: str):
             if operation == "create":
                 add_project(CreateProjectRequest.model_validate(data))
             elif operation == "update":
-                update_project(CreateProjectRequest.model_validate(data))
+                update_project(UpdateProjectRequest.model_validate(data))
             elif operation == "delete":
                 delete_project(DeleteProjectRequest.model_validate(data))
+            elif operation == "update status":
+                close_project(CloseProjectRequest.model_validate(data))
+            elif operation == "update approvals":
+                modify_approved_institutions(ModifyApprovalsProjectRequest.model_validate(data))
         elif entity == "resume":
             if operation == "create":
                 add_cv(CreateResumeRequest.model_validate(data))
             elif operation == "update":
-                update_cv(CreateResumeRequest.model_validate(data))
+                update_cv(UpdateResumeRequest.model_validate(data))
             elif operation == "delete":
                 delete_resume(DeleteResumeRequest.model_validate(data))
 

@@ -116,8 +116,97 @@ class AppHelper:
             postgres_handler.upsert_compatibilities(key_id=id_project, compatibilities=compatibilities, entity_type="project")
         return True
     
-    def perform_delete_project(self):
-        pass
+    def perform_delete_project(self, request):
+        id = request.id
+        self.logger.debug(f"Starting project deletion process for project ID: {id}")
 
-    def perform_delete_resume(self):
-        pass
+        try:
+            with PostgresHandler() as postgres_handler:
+                self.logger.debug(f"Attempting to delete project ID {id} from PostgreSQL.")
+                result_postgres = postgres_handler.delete_project(project_id=id)
+                if result_postgres:
+                    self.logger.info(f"Successfully deleted project ID {id} from PostgreSQL.")
+                else:
+                    self.logger.warning(f"Project ID {id} was not found or could not be deleted in PostgreSQL.")
+
+        except Exception as e:
+            self.logger.error(f"Error while deleting project ID {id} from PostgreSQL: {e}")
+            result_postgres = False
+
+        try:
+            self.logger.debug(f"Attempting to delete project ID {id} from MongoDB.")
+            result_mongo = self.mongo_handler.delete_project(id_project=id)
+            if result_mongo:
+                self.logger.info(f"Successfully deleted project ID {id} from MongoDB.")
+            else:
+                self.logger.warning(f"Project ID {id} was not found or could not be deleted in MongoDB.")
+
+        except Exception as e:
+            self.logger.error(f"Error while deleting project ID {id} from MongoDB: {e}")
+            result_mongo = False
+
+        overall_result = result_postgres and result_mongo
+
+        if overall_result:
+            self.logger.info(f"Project ID {id} successfully deleted from both PostgreSQL and MongoDB.")
+        else:
+            self.logger.warning(f"Project ID {id} could not be fully deleted. PostgreSQL: {result_postgres}, MongoDB: {result_mongo}.")
+
+        return overall_result
+
+
+    def perform_delete_resume(self, request):
+        id = request.id
+        self.logger.debug(f"Starting resume deletion process for resume ID: {id}")
+
+        try:
+            with PostgresHandler() as postgres_handler:
+                self.logger.debug(f"Attempting to delete resume ID {id} from PostgreSQL.")
+                result_postgres = postgres_handler.delete_resume(resume_id=id)
+                if result_postgres:
+                    self.logger.info(f"Successfully deleted resume ID {id} from PostgreSQL.")
+                else:
+                    self.logger.warning(f"Resume ID {id} was not found or could not be deleted in PostgreSQL.")
+
+        except Exception as e:
+            self.logger.error(f"Error while deleting resume ID {id} from PostgreSQL: {e}")
+            result_postgres = False
+
+        try:
+            self.logger.debug(f"Attempting to delete resume ID {id} from MongoDB.")
+            result_mongo = self.mongo_handler.delete_resume(id_resume=id)
+            if result_mongo:
+                self.logger.info(f"Successfully deleted resume ID {id} from MongoDB.")
+            else:
+                self.logger.warning(f"Resume ID {id} was not found or could not be deleted in MongoDB.")
+
+        except Exception as e:
+            self.logger.error(f"Error while deleting resume ID {id} from MongoDB: {e}")
+            result_mongo = False
+
+        overall_result = result_postgres and result_mongo
+
+        if overall_result:
+            self.logger.info(f"Resume ID {id} successfully deleted from both PostgreSQL and MongoDB.")
+        else:
+            self.logger.warning(f"Resume ID {id} could not be fully deleted. PostgreSQL: {result_postgres}, MongoDB: {result_mongo}.")
+
+        return overall_result
+
+
+    def perform_close_project(self, request):
+        id = request.id
+        project = self.mongo_handler.get_project(project_id=id)
+        status = project.get("status")
+        with PostgresHandler() as postgres_handler:
+            result = postgres_handler.update_project_status(project_id=id, status=status)
+        return result
+
+    def perform_modify_approved_institutions(self, request):
+        id = request.id
+        project = self.mongo_handler.get_project(project_id=id)
+        approved_by = '-'.join(project.get("approved_by", []))
+        with PostgresHandler() as postgres_handler:
+            result = postgres_handler.update_project_approved_by(project_id=id, approved_by=approved_by)
+        return result
+        
