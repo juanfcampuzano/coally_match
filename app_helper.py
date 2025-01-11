@@ -209,4 +209,22 @@ class AppHelper:
         with PostgresHandler() as postgres_handler:
             result = postgres_handler.update_project_approved_by(project_id=id, approved_by=approved_by)
         return result
+    
+    def apply(self, request):
+        id_resume = request.id_resume
+        id_project = request.id_project
+        
+        parsed_resume = self.mongo_handler.get_parsed_project(id_resume)
+        parsed_project = self.mongo_handler.get_parsed_project(id_project)
+
+        if not parsed_resume or not parsed_project:
+            return False
+        
+        compatibilities = {
+            str(parsed_project['id']): max(0, min(self.calculate_compatibility(parsed_resume=parsed_resume, parsed_project=parsed_project, model=self.model), 100))
+        }
+        
+        with PostgresHandler() as handler:
+            handler.upsert_compatibilities(key_id=id_resume, compatibilities=compatibilities, entity_type="resume")
+        return True
         

@@ -176,3 +176,15 @@ class MongoDBHandler:
         with MongoDBConnection() as mongo:
             result = mongo.connection[self.ml_database_name][self.parsed_resumes_collection_name].delete_many({"id": ObjectId(id_resume)})
             return result.deleted_count > 0
+        
+    def get_parsed_resume(self, id_resume: str) -> dict:
+        with MongoDBConnection() as mongo:
+            result = mongo.connection[self.ml_database_name][self.parsed_resumes_collection_name].find_one({"id": ObjectId(id_resume)})
+
+        return result
+
+    def get_parsed_project(self, id_project: str) -> dict:
+        with MongoDBConnection() as mongo:
+            result = mongo.connection[self.ml_database_name][self.parsed_projects_collection_name].find_one({"id": ObjectId(id_project)})
+        
+        return result

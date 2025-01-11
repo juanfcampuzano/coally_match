@@ -11,6 +11,7 @@ from parsers.models.delete_project_request import DeleteProjectRequest
 from parsers.models.delete_resume_request import DeleteResumeRequest
 from parsers.models.close_project_request import CloseProjectRequest
 from parsers.models.modify_approvals_project_request import ModifyApprovalsProjectRequest
+from parsers.models.apply_request import ApplyRequest
 from parsers.decorators import handle_exception
 from parsers.logger import AppLogger
 from app_helper import AppHelper
@@ -139,6 +140,16 @@ def modify_approved_institutions(request: ModifyApprovalsProjectRequest):
     logger.warning(f"Couldn't modify approvals for project with id {request.id}.")
     return {"message": f"Couldn't modify approvals for project with id {request.id}."}
 
+@handle_exception(logger)
+@app.post("/api/resume/apply")
+def apply(request: ApplyRequest):
+    updated = app_helper.apply(request)
+    if updated:
+        logger.info(f"Applied resume with id {request.id_resume} to project with id {request.id_project}")
+        return {"message": f"Applied resume with id {request.id_resume} to project with id {request.id_project}"}
+    logger.warning(f"Couldn't apply for project with id {request.id} with resume with id {request.id_resume}.")
+    return {"message": f"Applied resume with id {request.id_resume} to project with id {request.id_project}"}
+
 def limpiar_json(json_sucio):
     json_limpio = re.sub(r'\\[nrt]', '', json_sucio)
     json_limpio = re.sub(r'\\"', '"', json_limpio)
@@ -174,6 +185,8 @@ def process_message(message_body: str):
                 update_cv(UpdateResumeRequest.model_validate(data))
             elif operation == "delete":
                 delete_resume(DeleteResumeRequest.model_validate(data))
+            elif operation == "apply":
+                apply(ApplyRequest.model_validate(data))
 
     except json.JSONDecodeError as e:
         logger.error(f"Invalid JSON format: {e} - Body: {message_body}")
