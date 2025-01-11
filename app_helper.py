@@ -227,4 +227,10 @@ class AppHelper:
         with PostgresHandler() as handler:
             handler.upsert_compatibilities(key_id=id_resume, compatibilities=compatibilities, entity_type="resume")
         return True
-        
+    
+    def get_feedback_data(self):
+
+        with PostgresHandler() as handler:
+            result = handler.fetch_feedback_data()
+
+        return result

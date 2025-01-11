@@ -107,6 +107,7 @@ clients:
     postgres_tables:
       compatibilities: coally_compatibility_percentages
       project_filters: coally_project_filters
+      feedback: coally_feedback
     
     sqs_url: https://sqs.us-east-2.amazonaws.com/203152832070/ml_empleo_coally.fifo
 
@@ -252,5 +253,6 @@ clients:
     postgres_tables:
       compatibilities: uniandes_compatibility_percentages
       project_filters: uniandes_project_filters
+      feedback: uniandes_feedback
 
     sqs_url: https://sqs.us-east-2.amazonaws.com/203152832070/ml_empleo_uniandes.fifo

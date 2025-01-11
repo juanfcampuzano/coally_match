@@ -22,6 +22,7 @@ class PostgresHandler:
 
         self.compatibility_table = config.get("postgres_tables", {}).get("compatibilities")
         self.project_filters_table = config.get("postgres_tables", {}).get("project_filters")
+        self.feedback_table = config.get("postgres_tables", {}).get("feedback")
 
     def load_config(self, file_path):
         with open(file_path, 'r', encoding='utf-8') as file:
@@ -218,3 +219,24 @@ class PostgresHandler:
         except Exception as e:
             logger.error(f"Error during updating approved_by for project ID {project_id}: {e}")
             return False
+        
+    def fetch_feedback_data(self):
+        query = f"""
+        SELECT 
+            DATE_TRUNC('week', date) AS week_start,
+            COUNT(CASE WHEN feedback = 'like' THEN 1 END) AS likes,
+            COUNT(CASE WHEN feedback = 'dislike' THEN 1 END) AS dislikes
+        FROM {self.feedback_table}
+        GROUP BY week_start
+        ORDER BY week_start;
+        """
+        try:
+            self.cur.execute(query)
+            rows = self.cur.fetchall()
+            columns = [desc[0] for desc in self.cur.description]
+            result = [dict(zip(columns, row)) for row in rows]
+            
+            return result
+        except Exception as e:
+            logger.error(f"Error fetching feedback data grouped by weeks: {e}")
+            return []

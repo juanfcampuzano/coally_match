@@ -1,7 +1,6 @@
-from bson.objectid import ObjectId
-import pickle as pkl
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 from dotenv import load_dotenv
 from parsers.models.create_resume_request import CreateResumeRequest
 from parsers.models.create_project_request import CreateProjectRequest
@@ -17,9 +16,8 @@ from parsers.logger import AppLogger
 from app_helper import AppHelper
 import boto3
 import json
-import time
 import re
-
+import asyncio
 import yaml
 import os
 
@@ -150,6 +148,28 @@ def apply(request: ApplyRequest):
     logger.warning(f"Couldn't apply for project with id {request.id} with resume with id {request.id_resume}.")
     return {"message": f"Applied resume with id {request.id_resume} to project with id {request.id_project}"}
 
+@app.get("/api/get_feedback_data")
+async def get_feedback_data():
+    try:
+        rows = app_helper.get_feedback_data()
+
+        response_data = {
+            "timestamps": [row["week_start"].strftime("%Y-%m-%d") for row in rows],
+            "likes": [row["likes"] for row in rows],
+            "dislikes": [row["dislikes"] for row in rows],
+        }
+
+        return response_data
+    except Exception as e:
+        logger.error(f"Error in /api/get_feedback_data: {e}")
+        return {"error": "Unable to fetch feedback data"}
+    
+
+@app.get("/api/dashboard", response_class=HTMLResponse)
+async def dashboard():
+    with open("./templates/dashboard.html", "r") as file:
+        return HTMLResponse(content=file.read())
+
 def limpiar_json(json_sucio):
     json_limpio = re.sub(r'\\[nrt]', '', json_sucio)
     json_limpio = re.sub(r'\\"', '"', json_limpio)
@@ -196,7 +216,7 @@ def process_message(message_body: str):
         logger.error(f"Unexpected error: {e}")
 
 
-def consume_queue():
+async def consume_queue():
     while True:
         response = sqs.receive_message(
             QueueUrl=QUEUE_URL,
@@ -218,8 +238,10 @@ def consume_queue():
                     logger.error(f"Error processing message: {e}")
         else:
             logger.debug("Waiting for messages.")
-            time.sleep(5)
+        await asyncio.sleep(5)
 
 
-logger.info("Starting SQS consumer...")
-consume_queue()
+@app.on_event("startup")
+async def startup_event():
+    logger.info("Starting SQS consumer in the background...")
+    asyncio.create_task(consume_queue())
