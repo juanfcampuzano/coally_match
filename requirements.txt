@@ -10,3 +10,5 @@ langchain-openai
 langchain
 pandas
 boto3
+apscheduler
+pytz

@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 import os
-import logging
+import pymongo
 from parsers.decorators import handle_exception
 from bson import ObjectId
 from parsers.logger import AppLogger
@@ -122,7 +122,8 @@ class MongoDBHandler:
         query = {
             "majors": {
                 "$in": search_list
-            }
+            },
+            "status": "En espera"
         }
 
         if collection == "projects":
@@ -188,3 +189,53 @@ class MongoDBHandler:
             result = mongo.connection[self.ml_database_name][self.parsed_projects_collection_name].find_one({"id": ObjectId(id_project)})
         
         return result
+    
+    def list_parsed_projects_ids(self) -> list:
+        with MongoDBConnection() as mongo:
+            result = mongo.connection[self.ml_database_name][self.parsed_projects_collection_name].find(projection = {"id"})
+
+            return list(result)
+        
+    def get_inactive_projects(self) -> set:
+        with MongoDBConnection() as mongo:
+            expired_projects = mongo.old_connection[self.app_database_name][self.projects_collection_name].find(
+                {"status": { "$ne": "En espera" }},
+                projection={"_id": 1, "status": 1}
+            )
+            expired_projects = list(expired_projects)
+            project_status_map = {str(proj["_id"]):proj["status"] for proj in expired_projects}
+            return  project_status_map
+        
+    def update_project_status(self, project_id: str, status: str):
+        try:
+            with MongoDBConnection() as mongo:
+                result = mongo.connection[self.ml_database_name][self.parsed_projects_collection_name].update_one({"id": ObjectId(project_id)}, {"$set": {"status": status}})
+            
+            if result.modified_count > 0:
+                logger.debug(f"Updated status for project with ID {project_id} to {status}")
+                return True
+            else:
+                logger.warning(f"Project ID {project_id} not found or status is the same. No update performed.")
+                return False
+        except Exception as e:
+            logger.error(f"Error updating project status for project ID {project_id}: {e}")
+            return False
+        
+    def update_projects_status(self, projects_status):
+        try:
+            with MongoDBConnection() as mongo:
+                bulk_updates = [
+                    pymongo.UpdateOne({"id": ObjectId(project_id)}, {"$set": {"status": status}})
+                    for project_id, status in projects_status.items()
+                ]
+                result = mongo.connection[self.ml_database_name][self.parsed_projects_collection_name].bulk_write(bulk_updates)
+            
+            if result.modified_count > 0:
+                logger.debug(f"Updated status for {result.modified_count} projects")
+                return True
+            else:
+                logger.warning("No projects found or statuses unchanged. No update performed.")
+                return False
+        except Exception as e:
+            logger.error(f"Error updating project statuses: {e}")
+            return False

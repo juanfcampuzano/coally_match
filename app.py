@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from dotenv import load_dotenv
@@ -20,12 +20,16 @@ import re
 import asyncio
 import yaml
 import os
+from apscheduler.schedulers.background import BackgroundScheduler
+import pytz
 
 logger = AppLogger("App").get_logger()
 
 load_dotenv()
 
 app = FastAPI(docs_url="/api/docs")
+
+colombia_tz = pytz.timezone("America/Bogota")
 
 sqs = boto3.client("sqs", region_name="us-east-2")
 
@@ -240,8 +244,23 @@ async def consume_queue():
             logger.debug("Waiting for messages.")
         await asyncio.sleep(5)
 
+def close_expired_projects():
+    current_stored_projects = app_helper.mongo_handler.list_parsed_projects_ids()
+    inactive_projects_map = app_helper.mongo_handler.get_inactive_projects()
+
+    current_stored_projects = {str(proj.get("id")) for proj in current_stored_projects}
+
+    projects_to_close = {proj:inactive_projects_map.get(proj) for proj in current_stored_projects if proj in inactive_projects_map} 
+    
+    app_helper.perform_close_projects(projects_to_close)
+
+scheduler = BackgroundScheduler(timezone=colombia_tz)
+scheduler.add_job(close_expired_projects, 'cron', hour=0, minute=0)
 
 @app.on_event("startup")
 async def startup_event():
-    logger.info("Starting SQS consumer in the background...")
+    logger.info("Starting the SQS consumer in the background...")
     asyncio.create_task(consume_queue())
+
+    logger.info("Starting the cron job in the background...")
+    scheduler.start()

@@ -193,14 +193,23 @@ class AppHelper:
 
         return overall_result
 
-
     def perform_close_project(self, request):
         id = request.id
         project = self.mongo_handler.get_project(project_id=id)
         status = project.get("status")
         with PostgresHandler() as postgres_handler:
             result = postgres_handler.update_project_status(project_id=id, status=status)
+        self.mongo_handler.update_project_status(project_id=id, status=status)
         return result
+
+    def perform_close_projects(self, project_ids):
+        
+        with PostgresHandler() as postgres_handler:
+            postgres_handler.update_projects_status(project_ids)
+        
+        self.mongo_handler.update_projects_status(project_ids)
+        
+        return True
 
     def perform_modify_approved_institutions(self, request):
         id = request.id

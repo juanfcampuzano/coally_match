@@ -240,3 +240,30 @@ class PostgresHandler:
         except Exception as e:
             logger.error(f"Error fetching feedback data grouped by weeks: {e}")
             return []
+        
+
+    def update_projects_status(self, projects_status):
+        query = f"""
+        UPDATE public.{self.project_filters_table}
+        SET status = CASE project_id 
+        """
+        
+        cases = " ".join([f"WHEN %s THEN %s" for _ in projects_status])
+        query += cases + " END WHERE project_id IN ({})".format(", ".join(["%s"] * len(projects_status)))
+        
+        params = []
+        for project_id, status in projects_status.items():
+            params.extend([project_id, status])
+        params.extend(projects_status.keys())
+        
+        try:
+            self.cur.execute(query, params)
+            if self.cur.rowcount > 0:
+                logger.debug(f"Updated status for {len(projects_status)} projects")
+                return True
+            else:
+                logger.warning("No projects found. No status updated.")
+                return False
+        except Exception as e:
+            logger.error(f"Error updating project statuses: {e}")
+            return False
